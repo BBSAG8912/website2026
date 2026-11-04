@@ -1,0 +1,67 @@
+---
+/**
+ * Mobile CTA-Leiste: sticky unten, dunkle Pill mit Telefon + «Service anfragen».
+ * Auf allen Seiten, nur mobil (< 900px).
+ */
+import { company, routes } from '../data/site';
+
+interface Props {
+  ctaHref?: string;
+  ctaLabel?: string;
+}
+
+const { ctaHref = routes.formService, ctaLabel = 'Service anfragen' } = Astro.props;
+---
+
+<div class="cta-bar" role="complementary" aria-label="Schnellkontakt">
+  <a href={company.phone.href} class="cta-bar__phone">{company.phone.display}</a>
+  <a href={ctaHref} class="cta-bar__primary">{ctaLabel}</a>
+</div>
+
+<style>
+  .cta-bar {
+    display: none;
+  }
+
+  @media (max-width: 899.98px) {
+    .cta-bar {
+      position: sticky;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      z-index: 30;
+      margin: 0 10px 10px;
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 6px;
+      padding: 6px;
+      border-radius: var(--r-pill);
+      background: var(--c-ink);
+      box-shadow: var(--shadow-cta-bar);
+    }
+
+    .cta-bar a {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--r-pill);
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .cta-bar__primary {
+      background: var(--c-primary);
+    }
+
+    .cta-bar__primary:hover,
+    .cta-bar__primary:active {
+      background: var(--c-primary-hover);
+      color: #fff;
+    }
+
+    .cta-bar a:focus-visible {
+      outline-color: #fff;
+      outline-offset: -2px;
+    }
+  }
+</style>

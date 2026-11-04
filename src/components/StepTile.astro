@@ -1,0 +1,115 @@
+---
+/**
+ * Schrittkachel: Rahmen, nummerierter Kreis.
+ * `tone="primary"` (So läuft es ab) oder `tone="soft"` (Warum Sie bei uns richtig sind).
+ */
+import Copy from './Copy.astro';
+
+interface Props {
+  n: string | number;
+  title: string;
+  text: string;
+  tone?: 'primary' | 'soft';
+  headingLevel?: 'h3' | 'h4';
+}
+
+const { n, title, text, tone = 'primary', headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<div class:list={['step', `step--${tone}`]}>
+  <span class="step__n" aria-hidden="true">{n}</span>
+  <div class="step__body">
+    <Heading class="step__title"><Copy text={title} /></Heading>
+    <p class="step__text"><Copy text={text} /></p>
+  </div>
+</div>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 200px;
+    padding: 32px;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--r-tile);
+  }
+
+  .step--soft {
+    min-height: 220px;
+    padding: 28px;
+  }
+
+  .step__n {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .step--soft .step__n {
+    background: var(--c-surface-tint);
+    color: var(--c-primary);
+  }
+
+  .step__body {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .step__title {
+    font-size: 22px;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .step__text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .step--soft .step__text {
+    font-size: 15px;
+  }
+
+  @media (max-width: 899.98px) {
+    .step,
+    .step--soft {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 16px;
+      min-height: 0;
+      padding: 20px;
+    }
+
+    .step__n {
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+    }
+
+    .step__body {
+      margin-top: 0;
+      gap: 4px;
+    }
+
+    .step__title {
+      font-size: 18px;
+    }
+
+    .step__text {
+      font-size: 15px;
+    }
+  }
+</style>

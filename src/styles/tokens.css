@@ -1,0 +1,64 @@
+/*
+ * Design-Tokens Berger Boiler-Service AG
+ * Quelle: design_handoff_berger_website/README.md («Design Tokens»)
+ */
+:root {
+  /* Farben */
+  --c-primary: #6a5497;
+  --c-primary-hover: #57447f;
+  --c-primary-dark-text: #4f3d75;
+  --c-logo-violet: #634d8e;
+  --c-ink: #1e1a26;
+  --c-text-muted: #5e5869;
+  --c-surface-tint: #f4f2f8;
+  --c-surface-tint-hover: #ece7f5;
+  --c-border: #e2deea;
+  --c-placeholder-line: #b9b1c8;
+  --c-photo-a: #3b3150;
+  --c-photo-b: #423757;
+  --c-on-dark-muted: #d9d3e6;
+  --c-on-dark-soft: #eeeaf4;
+  --c-on-dark-link-hover: #d9cdf2;
+  --c-white-hover: #efeaf8;
+  --c-white: #ffffff;
+
+  --photo-placeholder: repeating-linear-gradient(135deg, var(--c-photo-a) 0 12px, var(--c-photo-b) 12px 24px);
+  --photo-gradient: linear-gradient(to top, rgba(24, 19, 34, 0.88), rgba(24, 19, 34, 0));
+  --photo-overlay: rgba(24, 19, 34, 0.88);
+
+  /* Typografie */
+  --font-sans: 'Schibsted Grotesk', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Radien */
+  --r-tile: 20px;
+  --r-field: 12px;
+  --r-item: 16px;
+  --r-pill: 999px;
+
+  /* Abstände */
+  --gutter-tiles: 16px; /* Seitenrand Kacheln */
+  --gutter-text: 32px; /* Seitenrand Text */
+  --gap-tiles: 10px;
+  --section-space: 80px;
+
+  /* Bewegung */
+  --ease-expand: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-expand: 0.45s;
+
+  /* Schatten */
+  --shadow-cta-bar: 0 10px 28px rgba(30, 26, 38, 0.3);
+
+  /* Layout */
+  --max-width: 1600px;
+}
+
+@media (max-width: 899.98px) {
+  :root {
+    --r-tile: 18px;
+    --gutter-tiles: 10px;
+    --gutter-text: 20px;
+    --gap-tiles: 8px;
+    --section-space: 48px;
+  }
+}

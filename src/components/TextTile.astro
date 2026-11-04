@@ -1,0 +1,58 @@
+---
+/** Textkachel: helle Fläche, Titel + 2–3 Sätze. */
+import Copy from './Copy.astro';
+
+interface Props {
+  title: string;
+  text: string;
+  headingLevel?: 'h3' | 'h4';
+}
+
+const { title, text, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<div class="text-tile">
+  <Heading class="text-tile__title"><Copy text={title} /></Heading>
+  <p class="text-tile__text"><Copy text={text} /></p>
+  <slot />
+</div>
+
+<style>
+  .text-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 240px;
+    padding: 32px;
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+  }
+
+  .text-tile__title {
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .text-tile__text {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  @media (max-width: 899.98px) {
+    .text-tile {
+      min-height: 0;
+      padding: 24px;
+      gap: 8px;
+    }
+    .text-tile__title {
+      font-size: 20px;
+    }
+    .text-tile__text {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+  }
+</style>

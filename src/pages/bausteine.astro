@@ -1,0 +1,167 @@
+---
+/**
+ * Interne Übersicht aller Bausteine (nicht indexiert, nicht verlinkt).
+ * Dient zur Abnahme der Komponenten, bevor die Unterseiten gebaut werden.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoColumns from '../components/PhotoColumns.astro';
+import TextTile from '../components/TextTile.astro';
+import StepTile from '../components/StepTile.astro';
+import Faq from '../components/Faq.astro';
+import CtaBlock from '../components/CtaBlock.astro';
+import Button from '../components/Button.astro';
+import { company, routes } from '../data/site';
+---
+
+<BaseLayout title="Bausteine" noindex>
+  <div class="intro">
+    <p class="eyebrow">Intern · nicht verlinkt</p>
+    <h1>Bausteine</h1>
+    <p class="lead">
+      Alle wiederverwendbaren Komponenten gemäss Design-Handoff. Gestrichelt unterstrichene Texte sind offener Inhalt.
+    </p>
+  </div>
+
+  <h2 class="section-title">Buttons</h2>
+  <div class="row">
+    <Button href="#" variant="primary" size="lg">Service anfragen</Button>
+    <Button href={company.phone.href} variant="outline">{company.phone.display}</Button>
+    <span class="on-tint">
+      <Button href="#" variant="soft" size="sm" arrow>News</Button>
+    </span>
+    <span class="on-violet">
+      <Button href="#" variant="white" size="lg" arrow>Solar anfragen</Button>
+      <Button href="#" variant="outline-light" size="lg">{company.phone.display}</Button>
+    </span>
+  </div>
+
+  <h2 class="section-title">Foto-Spalten (Unterseite, 2 Spalten)</h2>
+  <div class="pad">
+    <PhotoColumns
+      height={580}
+      titleSize={40}
+      items={[
+        {
+          title: 'Service und Entkalkung',
+          text: '[1–2 Sätze zum Thema]',
+          imageHint: 'Entkalkung im Einsatz',
+          cta: { label: 'Mehr erfahren', href: routes.boilerService },
+        },
+        {
+          title: 'Reparatur und Ersatz',
+          text: '[1–2 Sätze zum Thema]',
+          imageHint: 'Neuer Boiler bei der Montage',
+          cta: { label: 'Mehr erfahren', href: routes.boilerRepair },
+        },
+      ]}
+    />
+  </div>
+
+  <h2 class="section-title">Foto-Spalten fix (Standorte)</h2>
+  <div class="pad">
+    <PhotoColumns
+      fixed
+      height={380}
+      titleSize={36}
+      mobileHeight={130}
+      items={company.locations.map((l) => ({
+        n: '',
+        title: l.name,
+        text: `${l.street}, ${l.city}`,
+        imageHint: `Standort ${l.name}`,
+      }))}
+    />
+  </div>
+
+  <h2 class="section-title"><span class="todo-h">[So läuft es ab]</span></h2>
+  <div class="tile-grid">
+    <StepTile n={1} title="[Schritt]" text="[1 Satz]" />
+    <StepTile n={2} title="[Schritt]" text="[1 Satz]" />
+    <StepTile n={3} title="[Schritt]" text="[1 Satz]" />
+  </div>
+  <div class="tile-grid" style="padding-top: var(--gap-tiles)">
+    <TextTile title="[Kacheltitel]" text="[2–3 Sätze]" />
+    <TextTile title="[Kacheltitel]" text="[2–3 Sätze]" />
+    <TextTile title="[Kacheltitel]" text="[2–3 Sätze]" />
+  </div>
+
+  <h2 class="section-title">Warum Sie bei uns richtig sind</h2>
+  <div class="tile-grid" style="--cols: 4">
+    <StepTile tone="soft" n="01" title="Kompetente Beratung" text="[1–2 Sätze]" />
+    <StepTile tone="soft" n="02" title="Effiziente Ausführung" text="[1–2 Sätze]" />
+    <StepTile tone="soft" n="03" title="Transparenter Preis" text="[1–2 Sätze]" />
+    <StepTile tone="soft" n="04" title="Umfassender Service" text="[1–2 Sätze]" />
+  </div>
+
+  <CtaBlock title="[Interesse an Solar?]" ctaLabel="Solar anfragen" ctaHref={routes.formSolar} />
+
+  <Faq
+    items={[
+      { q: '[Frage 1]', a: '[Antwort]' },
+      { q: '[Frage 2]', a: '[Antwort]' },
+      { q: '[Frage 3]', a: '[Antwort]' },
+    ]}
+  />
+</BaseLayout>
+
+<style>
+  .intro {
+    padding: 40px var(--gutter-text) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .eyebrow {
+    font: 500 13px var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  h1 {
+    font-size: clamp(52px, 8vw, 104px);
+    line-height: 0.92;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+
+  .lead {
+    max-width: 640px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  .pad {
+    padding: 0 var(--gutter-tiles);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 0 var(--gutter-text);
+  }
+
+  .on-tint,
+  .on-violet {
+    display: inline-flex;
+    gap: 8px;
+    padding: 16px;
+    border-radius: var(--r-tile);
+  }
+
+  .on-tint {
+    background: var(--c-surface-tint);
+  }
+
+  .on-violet {
+    background: var(--c-primary);
+  }
+
+  .todo-h {
+    border-bottom: 1px dashed var(--c-placeholder-line);
+  }
+</style>

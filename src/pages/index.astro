@@ -1,0 +1,77 @@
+---
+/**
+ * Startseite – Design 5a («Startseite Design.dc.html»).
+ * Header · 4 Foto-Spalten (640px) · Footer.
+ * Fotos fehlen noch: Sobald geliefert, unter src/assets/fotos/ ablegen, importieren und
+ * bei `image` eintragen – der Platzhalter verschwindet dann automatisch.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoColumns, { type ColumnItem } from '../components/PhotoColumns.astro';
+import { company, routes } from '../data/site';
+
+const worlds: ColumnItem[] = [
+  {
+    title: 'Boiler',
+    text: '[1 Satz: was wir hier tun]',
+    imageHint: 'Servicetechniker am geöffneten Boiler im Keller',
+    links: [
+      { label: 'Service und Entkalkung', href: routes.boilerService },
+      { label: 'Reparatur und Ersatz', href: routes.boilerRepair },
+    ],
+  },
+  {
+    title: 'Solar',
+    text: '[1 Satz: was wir hier tun]',
+    imageHint: 'Solarkollektoren auf einem Hausdach',
+    cta: { label: 'Mehr erfahren', href: routes.solar },
+  },
+  {
+    title: 'Korrosions- und Kalkschutz',
+    text: '[1 Satz: was wir hier tun]',
+    imageHint: 'Schutzanlage an einer Wasserleitung',
+    cta: { label: 'Mehr erfahren', href: routes.corrosion },
+  },
+  {
+    title: 'Für Installateure',
+    text: '[1 Satz: was wir hier tun]',
+    imageHint: 'Ersatzteil-Regal im Servicefahrzeug',
+    links: [
+      { label: 'Boiler-Ersatzteile', href: routes.installersParts },
+      { label: 'Boiler-Verkauf', href: routes.installersSales },
+      { label: 'Elysator-Produkte', href: routes.installersElysator },
+      { label: 'Serviceunterstützung', href: routes.installersSupport },
+    ],
+  },
+];
+---
+
+<BaseLayout footerSpace="tight">
+  <h1 class="visually-hidden">{company.name} – {company.claim}</h1>
+
+  <div class="home-worlds">
+    <PhotoColumns
+      items={worlds}
+      variant="home"
+      height={640}
+      titleSize={32}
+      mobileHeight={150}
+      mobileTitleSize={34}
+      showNumberMobile={false}
+      headingLevel="h2"
+      eagerImages
+      label="Unsere Bereiche"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .home-worlds {
+    padding: 0 var(--gutter-tiles);
+  }
+
+  @media (max-width: 899.98px) {
+    .home-worlds {
+      padding-top: 4px;
+    }
+  }
+</style>

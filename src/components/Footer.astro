@@ -1,0 +1,437 @@
+---
+/**
+ * Footer (DsFooter / DsMFooter).
+ * Desktop: 3 Kacheln, Hover verbreitert die Kachel (flex 1.8) und tönt sie ein.
+ * Mobil: Akkordeon. `compact`: nur Schlusszeile (z. B. «Über uns»).
+ */
+import Copy from './Copy.astro';
+import Button from './Button.astro';
+import { company, routes } from '../data/site';
+
+interface Props {
+  compact?: boolean;
+  /** «tight»: direkt unter den Startseiten-Spalten (10px); «section»: normaler Abschnittsabstand */
+  spaceTop?: 'tight' | 'section';
+  /** Offene Inhalte – bis der Kunde liefert */
+  aboutText?: string;
+  newsText?: string;
+}
+
+const {
+  compact = false,
+  spaceTop = 'section',
+  aboutText = '[Kurztext zur Firma]',
+  newsText = '[neuester Beitrag / Anzahl offener Stellen]',
+} = Astro.props;
+
+const tiles = [
+  { id: 'ft-about', title: 'Über uns' },
+  { id: 'ft-news', title: 'Aktuelles' },
+  { id: 'ft-contact', title: 'Kontakt' },
+] as const;
+---
+
+<footer class:list={['footer', `footer--${spaceTop}`, { 'footer--compact': compact }]}>
+  {
+    !compact && (
+      <div class="ftiles">
+        {tiles.map((t) => (
+          <section class="ftile" data-ftile aria-labelledby={`${t.id}-h`}>
+            <h2 class="ftile__h" id={`${t.id}-h`}>
+              <span class="ftile__title">{t.title}</span>
+              <button type="button" class="ftile__toggle" aria-expanded="false" aria-controls={t.id} data-ftile-toggle>
+                {t.title}
+                <span class="ftile__sign" aria-hidden="true">
+                  <span class="ftile__plus">+</span>
+                  <span class="ftile__minus">–</span>
+                </span>
+              </button>
+            </h2>
+
+            <div class="ftile__panel" id={t.id}>
+              <div class="ftile__clip">
+                <div class="ftile__inner">
+                  {t.id === 'ft-about' && (
+                    <>
+                      <p class="ftile__text">
+                        <Copy text={aboutText} />
+                      </p>
+                      <a class="ftile__more" href={routes.about}>
+                        Mehr erfahren <span aria-hidden="true">→</span>
+                      </a>
+                    </>
+                  )}
+
+                  {t.id === 'ft-news' && (
+                    <>
+                      <p class="ftile__text">
+                        <Copy text={newsText} />
+                      </p>
+                      <div class="ftile__pills">
+                        <Button href={routes.news} variant="soft" size="sm" arrow>
+                          News
+                        </Button>
+                        <Button href={routes.newsJobs} variant="soft" size="sm" arrow>
+                          Offene Stellen
+                        </Button>
+                      </div>
+                    </>
+                  )}
+
+                  {t.id === 'ft-contact' && (
+                    <>
+                      <div class="ftile__contact">
+                        <a href={company.phone.href} class="ftile__phone">
+                          {company.phone.display}
+                        </a>
+                        <a href={routes.contactForm}>
+                          Kontaktformular <span aria-hidden="true">→</span>
+                        </a>
+                      </div>
+                      <div class="ftile__addresses">
+                        {company.locations.map((l) => (
+                          <address>
+                            <strong>{l.name}</strong>
+                            {l.street}
+                            <span class="sep">, </span>
+                            <br />
+                            {l.city}
+                          </address>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="footer__bar">
+    <span>© {company.name}</span>
+    <nav aria-label="Rechtliches" class="footer__legal">
+      <a href={routes.imprint}>Impressum</a>
+      <a href={routes.privacy}>Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #fff;
+    color: var(--c-ink);
+    padding-top: var(--section-space);
+  }
+
+  .footer--tight {
+    padding-top: var(--gap-tiles);
+  }
+
+  .footer--compact {
+    padding-top: 40px;
+  }
+
+  .ftiles {
+    display: flex;
+    gap: var(--gap-tiles);
+    padding: 0 var(--gutter-tiles);
+  }
+
+  .ftile {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 260px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+    transition:
+      flex-grow var(--dur-expand) var(--ease-expand),
+      background-color 0.3s;
+  }
+
+  @media (min-width: 900px) and (hover: hover) {
+    .ftile:hover,
+    .ftile:focus-within {
+      flex-grow: 1.8;
+      background: var(--c-surface-tint-hover);
+    }
+  }
+
+  .ftile__h {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .ftile__toggle {
+    display: none;
+  }
+
+  .ftile__panel {
+    flex: 1;
+    display: grid;
+    grid-template-rows: 1fr;
+    min-height: 0;
+  }
+
+  .ftile__clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .ftile__inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ftile__text {
+    align-self: flex-start;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .ftile__more {
+    margin-top: auto;
+    align-self: flex-start;
+    display: flex;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .ftile__pills {
+    margin-top: auto;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ftile__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .ftile__phone {
+    color: var(--c-ink);
+  }
+
+  .ftile__addresses {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    gap: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+    white-space: nowrap;
+  }
+
+  .ftile__addresses address {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ftile__addresses strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+
+  .ftile__addresses .sep {
+    display: none;
+  }
+
+  .footer__bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px var(--gutter-text) 26px;
+    font-size: 14px;
+    color: var(--c-text-muted);
+  }
+
+  .footer--compact .footer__bar {
+    border-top: 1px solid var(--c-border);
+  }
+
+  .footer__legal {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer__legal a {
+    color: var(--c-text-muted);
+  }
+
+  .footer__legal a:hover {
+    color: var(--c-primary-dark-text);
+  }
+
+  /* Zwischengrössen: Kacheln brauchen Platz für die Adressen */
+  @media (max-width: 1100px) {
+    .ftile {
+      padding: 26px;
+    }
+    /* Adressen einzeilig untereinander statt zweispaltig */
+    .ftile__addresses {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+      white-space: normal;
+    }
+    .ftile__addresses address {
+      display: block;
+    }
+    .ftile__addresses br {
+      display: none;
+    }
+    .ftile__addresses .sep {
+      display: inline;
+    }
+    .ftile__addresses strong::after {
+      content: ' · ';
+      font-weight: 400;
+      color: var(--c-text-muted);
+    }
+  }
+
+  /* ---------- Mobil: Akkordeon ---------- */
+  @media (max-width: 899.98px) {
+    .footer--tight {
+      padding-top: 8px;
+    }
+
+    .footer--compact {
+      padding-top: 32px;
+    }
+
+    .ftiles {
+      flex-direction: column;
+    }
+
+    .ftile {
+      flex: none;
+      height: auto;
+      padding: 0;
+      gap: 0;
+    }
+
+    .ftile__title {
+      display: none;
+    }
+
+    .ftile__toggle {
+      all: unset;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 64px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    .ftile__toggle:focus-visible {
+      outline: 2px solid var(--c-primary);
+      outline-offset: -4px;
+      border-radius: var(--r-tile);
+    }
+
+    .ftile__sign {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--c-primary);
+    }
+
+    .ftile__minus {
+      display: none;
+    }
+
+    .ftile.is-open .ftile__plus {
+      display: none;
+    }
+
+    .ftile.is-open .ftile__minus {
+      display: inline;
+    }
+
+    .ftile__panel {
+      transition:
+        grid-template-rows 0.35s ease,
+        visibility 0.35s;
+    }
+
+    :global(html.js) .ftile:not(.is-open) .ftile__panel {
+      grid-template-rows: 0fr;
+      visibility: hidden;
+    }
+
+    .ftile__inner {
+      height: auto;
+      padding: 0 20px 20px;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .ftile__text {
+      font-size: 15px;
+    }
+
+    .ftile__more,
+    .ftile__pills,
+    .ftile__addresses {
+      margin-top: 0;
+    }
+
+    .ftile__more {
+      font-size: 15px;
+    }
+
+    .ftile__contact {
+      font-size: 15px;
+    }
+
+    .footer__bar {
+      padding: 18px 20px 24px;
+      font-size: 13px;
+    }
+
+    .footer__legal {
+      gap: 14px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-ftile-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tile = btn.closest<HTMLElement>('[data-ftile]');
+      if (!tile) return;
+      const open = !tile.classList.contains('is-open');
+      tile.parentElement?.querySelectorAll<HTMLElement>('[data-ftile]').forEach((t) => {
+        t.classList.toggle('is-open', t === tile && open);
+        t.querySelector('[data-ftile-toggle]')?.setAttribute('aria-expanded', String(t === tile && open));
+      });
+    });
+  });
+</script>

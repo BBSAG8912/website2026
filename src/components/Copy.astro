@@ -1,0 +1,37 @@
+---
+/**
+ * Gibt einen Text aus. Steht er in [eckigen Klammern], ist es offener Inhalt
+ * (Kundenregel: nicht erfinden) – er wird dann sichtbar gestrichelt markiert.
+ * Sobald der echte Text eingesetzt ist, verschwindet die Markierung automatisch.
+ */
+interface Props {
+  text: string;
+  /** Markierung für dunkle/violette Hintergründe */
+  onDark?: boolean;
+}
+
+const { text, onDark = false } = Astro.props;
+const isTodo = /^\s*\[[\s\S]*\]\s*$/.test(text);
+---
+
+{
+  isTodo ? (
+    <span class:list={['todo', { 'todo--dark': onDark }]} data-todo>
+      {text}
+    </span>
+  ) : (
+    <Fragment set:text={text} />
+  )
+}
+
+<style>
+  .todo {
+    border-bottom: 1px dashed var(--c-placeholder-line);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .todo--dark {
+    border-bottom-color: rgba(255, 255, 255, 0.55);
+  }
+</style>

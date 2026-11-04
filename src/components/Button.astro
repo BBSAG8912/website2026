@@ -1,0 +1,129 @@
+---
+/**
+ * Pill-Button als Link.
+ * - primary: violett (Hauptaktion)
+ * - outline: weiss mit Rahmen (z. B. Telefon im Header)
+ * - white: weiss auf Foto/violett
+ * - soft: weiss auf hellen Kacheln (Hover → violett)
+ * - outline-light: transparenter Rahmen auf violett
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'outline' | 'white' | 'soft' | 'outline-light';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'class'> {
+  href: string;
+  variant?: Variant;
+  size?: 'sm' | 'md' | 'lg';
+  arrow?: boolean;
+  /** Mobil volle Breite, 48px hoch */
+  blockOnMobile?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  arrow = false,
+  blockOnMobile = false,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, { 'btn--block-m': blockOnMobile }, className]}
+  {...rest}
+>
+  <slot />{arrow && <span aria-hidden="true">&nbsp;→</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    border-radius: var(--r-pill);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1.5px solid transparent;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+
+  .btn--sm {
+    font-size: 15px;
+    padding: 9.5px 16.5px;
+  }
+  .btn--md {
+    font-size: 16px;
+    padding: 11.5px 20.5px;
+  }
+  .btn--lg {
+    font-size: 16px;
+    padding: 13.5px 22.5px;
+  }
+
+  .btn--primary {
+    background: var(--c-primary);
+    color: #fff;
+  }
+  .btn--primary:hover {
+    background: var(--c-primary-hover);
+    color: #fff;
+  }
+
+  .btn--outline {
+    background: #fff;
+    color: var(--c-ink);
+    border-color: var(--c-border);
+  }
+  .btn--outline:hover {
+    border-color: var(--c-primary);
+    color: var(--c-primary);
+  }
+
+  .btn--white {
+    background: #fff;
+    color: var(--c-ink);
+  }
+  .btn--white:hover {
+    background: var(--c-white-hover);
+    color: var(--c-ink);
+  }
+
+  .btn--soft {
+    background: #fff;
+    color: var(--c-ink);
+  }
+  .btn--soft:hover {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .btn--outline-light {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  .btn--outline-light:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+
+  @media (max-width: 899.98px) {
+    .btn--block-m {
+      display: flex;
+      width: 100%;
+      min-height: 48px;
+      font-size: 15px;
+    }
+  }
+</style>

@@ -1,0 +1,545 @@
+---
+/**
+ * Foto-Spalten (DsColumns / DsMColumns).
+ *
+ * Desktop (≥ 900px, Maus): Spalten gleich breit; die Spalte unter der Maus (oder mit
+ * Tastaturfokus) wird breiter (flex 1.9) und zeigt Text + Unterthemen bzw. «Mehr erfahren».
+ * Touch / mobil: gestapelte Karten, Antippen klappt auf (Akkordeon).
+ * Ohne JavaScript sind alle Inhalte offen und erreichbar.
+ * Option `fixed`: kein Hover, Inhalt immer sichtbar (z. B. Standorte).
+ */
+import type { ImageMetadata } from 'astro';
+import Photo from './Photo.astro';
+import Copy from './Copy.astro';
+
+export interface ColumnLink {
+  label: string;
+  href: string;
+}
+
+export interface ColumnItem {
+  /** Nummer, z. B. «01» – Standard: fortlaufend; leerer String = keine Nummer */
+  n?: string;
+  title: string;
+  /** Kurztext; [in Klammern] = offener Inhalt */
+  text?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Beschreibung des gewünschten Fotos (Platzhalter) */
+  imageHint?: string;
+  links?: ColumnLink[];
+  cta?: ColumnLink;
+}
+
+interface Props {
+  items: ColumnItem[];
+  /** Höhe Desktop in px */
+  height?: number;
+  /** Kartenhöhe mobil (geschlossen) in px; offen +70px */
+  mobileHeight?: number;
+  titleSize?: number;
+  mobileTitleSize?: number;
+  /** «home»: Nummer + Pfeil oben, Titel darunter (Startseite). «default»: Titel + Pfeil unten (Unterseiten). */
+  variant?: 'home' | 'default';
+  showNumberMobile?: boolean;
+  fixed?: boolean;
+  headingLevel?: 'h2' | 'h3';
+  /** Für die Bildgrössen (sizes) */
+  eagerImages?: boolean;
+  label?: string;
+}
+
+const {
+  items,
+  height = 560,
+  mobileHeight = 150,
+  titleSize = 44,
+  mobileTitleSize = 28,
+  variant = 'default',
+  showNumberMobile = true,
+  fixed = false,
+  headingLevel = 'h3',
+  eagerImages = false,
+  label,
+} = Astro.props;
+
+const Heading = headingLevel;
+const uid = `cols-${Math.random().toString(36).slice(2, 8)}`;
+const sizes = `(min-width: 900px) ${Math.round(190 / items.length)}vw, 100vw`;
+
+const cols = items.map((it, i) => ({
+  ...it,
+  n: it.n ?? String(i + 1).padStart(2, '0'),
+  panelId: `${uid}-${i}`,
+}));
+---
+
+<ul
+  class:list={['cols', `cols--${variant}`, { 'cols--fixed': fixed, 'cols--no-num-m': !showNumberMobile }]}
+  style={`--h:${height}px;--h-m:${mobileHeight}px;--title:${titleSize}px;--title-m:${mobileTitleSize}px;--n:${items.length}`}
+  data-cols={fixed ? undefined : ''}
+  aria-label={label}
+>
+  {
+    cols.map((c) => (
+      <li class:list={['col', { 'is-open': fixed }]} data-col>
+        <Photo image={c.image} alt={c.imageAlt} hint={c.imageHint} sizes={sizes} loading={eagerImages ? 'eager' : 'lazy'} />
+        <div class="col__body">
+          <Heading class="col__heading">
+            {fixed ? (
+              <span class="col__head">
+                {c.n && <span class="col__n" aria-hidden="true">{c.n}</span>}
+                <span class="col__title" lang="de">{c.title}</span>
+              </span>
+            ) : (
+              <button type="button" class="col__head" aria-expanded="false" aria-controls={c.panelId} data-col-toggle>
+                {c.n && <span class="col__n" aria-hidden="true">{c.n}</span>}
+                <span class="col__title" lang="de">{c.title}</span>
+                <span class="col__icon" aria-hidden="true">
+                  <span class="col__icon-arrow">→</span>
+                  <span class="col__icon-plus">+</span>
+                  <span class="col__icon-minus">–</span>
+                </span>
+              </button>
+            )}
+          </Heading>
+
+          <div class="col__panel" id={c.panelId}>
+            <div class="col__panel-clip">
+              <div class="col__panel-inner">
+                {c.text && (
+                  <p class="col__text">
+                    <Copy text={c.text} onDark />
+                  </p>
+                )}
+                {c.links && c.links.length > 0 && (
+                  <ul class="col__links">
+                    {c.links.map((l) => (
+                      <li>
+                        <a href={l.href}>
+                          {l.label}
+                          <span aria-hidden="true">→</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {c.cta && (
+                  <a class="col__cta" href={c.cta.href}>
+                    {c.cta.label} <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .cols {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--gap-tiles);
+    height: var(--h);
+  }
+
+  .col {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    border-radius: var(--r-tile);
+    overflow: hidden;
+    background: var(--photo-placeholder);
+    transition: flex-grow var(--dur-expand) var(--ease-expand);
+  }
+
+  .col__body {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    background: var(--photo-gradient);
+    color: #fff;
+  }
+
+  .cols--home .col__body {
+    padding: 24px;
+  }
+
+  .col__heading {
+    margin: 0;
+    font: inherit;
+  }
+
+  .col__head {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'n n'
+      'title icon';
+    align-items: end;
+    gap: 16px;
+    cursor: pointer;
+  }
+
+  .cols--home .col__head {
+    grid-template-areas:
+      'n icon'
+      'title title';
+    align-items: center;
+    row-gap: 16px;
+    column-gap: 12px;
+  }
+
+  .cols--fixed .col__head {
+    cursor: default;
+  }
+
+  .col__head:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 6px;
+    border-radius: 6px;
+  }
+
+  .col__n {
+    grid-area: n;
+    font: 500 14px var(--font-mono);
+    color: var(--c-on-dark-muted);
+  }
+
+  .col__title {
+    grid-area: title;
+    min-width: 0;
+    font-size: min(var(--title), 2.7vw);
+    line-height: 1.02;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+    hyphens: auto;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+
+  .cols--home .col__title {
+    line-height: 1.05;
+    hyphens: manual;
+  }
+
+  .col__icon {
+    grid-area: icon;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--c-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .cols--home .col__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .col__icon-plus,
+  .col__icon-minus {
+    display: none;
+  }
+
+  /* Aufklapp-Bereich: animiert über grid-template-rows */
+  .col__panel {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows var(--dur-expand) var(--ease-expand),
+      visibility var(--dur-expand);
+  }
+
+  .col__panel-clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .col__panel-inner {
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 520px;
+  }
+
+  .cols--home .col__panel-inner {
+    padding-top: 16px;
+    gap: 16px;
+  }
+
+  .col__text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--c-on-dark-soft);
+  }
+
+  .cols--home .col__text {
+    font-size: 17px;
+  }
+
+  .col__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .col__links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .cols--home .col__links a {
+    padding: 14px 0;
+    font-size: 18px;
+  }
+
+  .col__links a:hover {
+    color: var(--c-on-dark-link-hover);
+  }
+
+  .col__cta {
+    align-self: flex-start;
+    background: #fff;
+    color: var(--c-ink);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 13px 20px;
+    border-radius: var(--r-pill);
+    transition: background-color 0.2s;
+  }
+
+  .cols--home .col__cta {
+    padding: 14px 22px;
+  }
+
+  .col__cta:hover {
+    background: var(--c-white-hover);
+    color: var(--c-ink);
+  }
+
+  .col__links a:focus-visible,
+  .col__cta:focus-visible {
+    outline-color: #fff;
+  }
+
+  /* Mit JS: geschlossen, solange nicht aktiv */
+  :global(html.js) .cols[data-cols] .col:not(.is-open) .col__panel {
+    grid-template-rows: 0fr;
+    visibility: hidden;
+  }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 900px) {
+    .cols[data-cols] .col.is-open {
+      flex-grow: 1.9;
+    }
+
+    .cols[data-cols] .col.is-open .col__icon {
+      background: var(--c-primary);
+      color: #fff;
+    }
+  }
+
+  /* ---------- Mobil ---------- */
+  @media (max-width: 899.98px) {
+    .cols {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .col {
+      flex: none;
+    }
+
+    .col__body,
+    .cols--home .col__body {
+      position: relative;
+      inset: auto;
+      padding: 0;
+      background: none;
+    }
+
+    .col__head,
+    .cols--home .col__head {
+      min-height: var(--h-m);
+      padding: 20px;
+      grid-template-areas:
+        'n icon'
+        'title icon';
+      align-content: end;
+      align-items: end;
+      row-gap: 6px;
+      column-gap: 12px;
+      background: linear-gradient(to top, rgba(24, 19, 34, 0.88), rgba(24, 19, 34, 0) 85%);
+      transition: min-height 0.35s ease;
+    }
+
+    .cols--no-num-m .col__n {
+      display: none;
+    }
+
+    .cols[data-cols] .col.is-open .col__head {
+      min-height: calc(var(--h-m) + 70px);
+    }
+
+    .col__n {
+      font-size: 12px;
+    }
+
+    .col__title,
+    .cols--home .col__title {
+      font-size: var(--title-m);
+      line-height: 1.02;
+      hyphens: auto;
+    }
+
+    .col__icon,
+    .cols--home .col__icon {
+      width: 44px;
+      height: 44px;
+    }
+
+    .col__icon-arrow {
+      display: none;
+    }
+
+    .col__icon-plus {
+      display: inline;
+    }
+
+    .cols[data-cols] .col.is-open .col__icon-plus {
+      display: none;
+    }
+
+    .cols[data-cols] .col.is-open .col__icon-minus {
+      display: inline;
+    }
+
+    .cols--fixed .col__icon {
+      display: none;
+    }
+
+    .col__panel {
+      background: var(--photo-overlay);
+      transition-duration: 0.35s;
+    }
+
+    .col__panel-inner,
+    .cols--home .col__panel-inner {
+      padding: 0 20px 18px;
+      gap: 0;
+      max-width: none;
+    }
+
+    .col__text,
+    .cols--home .col__text {
+      font-size: 15px;
+      padding-bottom: 10px;
+    }
+
+    .col__links a,
+    .cols--home .col__links a {
+      min-height: 50px;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    .col__cta,
+    .cols--home .col__cta {
+      align-self: stretch;
+      min-height: 48px;
+      margin-top: 4px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 15px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .col,
+    .col__panel,
+    .col__head {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /*
+   * Desktop mit Maus: aktiv = Spalte unter der Maus bzw. mit Fokus; Verlassen → alle gleich.
+   * Touch / mobil: Antippen schaltet um (Akkordeon, eine Karte offen).
+   */
+  const hoverMq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)');
+
+  function setOpen(col: HTMLElement, open: boolean) {
+    col.classList.toggle('is-open', open);
+    col.querySelector('[data-col-toggle]')?.setAttribute('aria-expanded', String(open));
+  }
+
+  function activate(container: HTMLElement, target: HTMLElement | null) {
+    container.querySelectorAll<HTMLElement>(':scope > [data-col]').forEach((c) => setOpen(c, c === target));
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cols]').forEach((container) => {
+    const cols = container.querySelectorAll<HTMLElement>(':scope > [data-col]');
+
+    cols.forEach((col) => {
+      col.addEventListener('mouseenter', () => {
+        if (hoverMq.matches) activate(container, col);
+      });
+      col.addEventListener('focusin', () => {
+        if (hoverMq.matches) activate(container, col);
+      });
+
+      col.querySelector('[data-col-toggle]')?.addEventListener('click', () => {
+        if (hoverMq.matches) return;
+        activate(container, col.classList.contains('is-open') ? null : col);
+      });
+    });
+
+    container.addEventListener('mouseleave', () => {
+      if (hoverMq.matches) activate(container, null);
+    });
+    container.addEventListener('focusout', (e) => {
+      if (!hoverMq.matches) return;
+      const next = (e as FocusEvent).relatedTarget as Node | null;
+      if (!next || !container.contains(next)) activate(container, null);
+    });
+  });
+
+  hoverMq.addEventListener('change', () => {
+    document.querySelectorAll<HTMLElement>('[data-cols]').forEach((c) => activate(c, null));
+  });
+</script>
