@@ -1,0 +1,86 @@
+---
+/** Formular-Abschnitt: Titel links, Felder im 6-Spalten-Raster rechts. */
+import type { SectionDef } from '../../data/forms';
+import Field from './Field.astro';
+import Copy from '../Copy.astro';
+
+interface Props {
+  section: SectionDef;
+  idPrefix: string;
+}
+
+const { section, idPrefix } = Astro.props;
+const prefix = `${idPrefix}-${section.key}`;
+---
+
+<div class="fsec" role="group" aria-labelledby={`${prefix}-h`} data-show-when={section.showWhen}>
+  <h2 class="fsec__title" id={`${prefix}-h`}>{section.title}</h2>
+  <div class="fsec__grid">
+    {section.fields.map((f) => <Field field={f} idPrefix={prefix} />)}
+    {
+      section.hint && (
+        <p class="fsec__hint">
+          <Copy text={section.hint} />
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .fsec {
+    margin: var(--gap-tiles) var(--gutter-tiles) 0;
+    padding: 40px;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--r-tile);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr);
+    gap: 48px;
+    min-width: 0;
+  }
+
+  .fsec[hidden] {
+    display: none;
+  }
+
+  .fsec__title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .fsec__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px 14px;
+  }
+
+  .fsec__hint {
+    grid-column: span 6;
+    font-size: 14px;
+    color: var(--c-text-muted);
+  }
+
+  @media (max-width: 899.98px) {
+    .fsec {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 22px 18px;
+    }
+
+    .fsec__title {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .fsec__grid {
+      gap: 14px 10px;
+    }
+
+    .fsec__hint {
+      font-size: 13px;
+    }
+  }
+</style>

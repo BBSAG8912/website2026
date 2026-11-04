@@ -1,0 +1,467 @@
+---
+/**
+ * Formular-Hülle: <form>, Spam-Schutz, Pflichtfeld-Hinweis, Absenden, Status-Meldungen.
+ * Validierung und Versand: siehe Script unten.
+ *
+ * Versand: POST (multipart/form-data) an PUBLIC_FORM_ENDPOINT – z. B. eigene Serverless-Funktion,
+ * die serverseitig erneut validiert, reCAPTCHA prüft und per E-Mail an berger@boiler-service.ch sendet.
+ * reCAPTCHA v2 («Ich bin kein Roboter»): PUBLIC_RECAPTCHA_SITE_KEY setzen.
+ */
+import Copy from '../Copy.astro';
+import { company } from '../../data/site';
+
+interface Props {
+  id: string;
+  formName: string;
+  submitLabel?: string;
+  variant?: 'page' | 'contact';
+  recaptcha?: boolean;
+  successTitle?: string;
+}
+
+const {
+  id,
+  formName,
+  submitLabel = 'Absenden',
+  variant = 'page',
+  recaptcha = true,
+  successTitle = 'Vielen Dank für Ihre Anfrage',
+} = Astro.props;
+
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+const siteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY ?? '';
+---
+
+<form
+  id={id}
+  class:list={['fshell', `fshell--${variant}`]}
+  action={endpoint || undefined}
+  method="post"
+  enctype="multipart/form-data"
+  novalidate
+  data-form
+  data-endpoint={endpoint}
+  data-recaptcha={recaptcha && siteKey ? '' : undefined}
+>
+  <input type="hidden" name="formular" value={formName} />
+  <!-- Honeypot gegen Spam-Bots: muss leer bleiben -->
+  <div class="hp" aria-hidden="true">
+    <label>Bitte leer lassen <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <slot />
+
+  <div class="fshell__foot">
+    <div class="fshell__foot-inner">
+      {
+        recaptcha &&
+          (siteKey ? (
+            <div class="fshell__captcha">
+              <div class="g-recaptcha" data-sitekey={siteKey} data-callback="bbsRecaptchaOk" />
+              <span class="field-error" data-captcha-error />
+            </div>
+          ) : (
+            <div class="fshell__captcha-ph" aria-hidden="true">
+              <span class="box" />
+              <span class="t">Ich bin kein Roboter</span>
+              <span class="m">[reCAPTCHA]</span>
+            </div>
+          ))
+      }
+      <p class="fshell__note">
+        <span class="req">*</span> Pflichtfeld · <Copy text="[Hinweis Datenschutz]" />
+      </p>
+      <div class="fshell__status" data-status role="alert" aria-live="assertive"></div>
+      <button type="submit" class="fshell__submit" data-submit>
+        <span class="label">{submitLabel}</span>
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="fshell__success" data-success-for={id} hidden tabindex="-1">
+  <h2>{successTitle}</h2>
+  <p>Wir haben Ihre Angaben erhalten und melden uns so rasch wie möglich bei Ihnen.</p>
+  <p>
+    Bei dringenden Anliegen erreichen Sie uns unter <a href={company.phone.href}>{company.phone.display}</a>.
+  </p>
+</div>
+
+{recaptcha && siteKey && <script is:inline src="https://www.google.com/recaptcha/api.js?hl=de" async defer />}
+
+<style>
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .fshell__foot {
+    padding: 40px 56px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr);
+    gap: 48px;
+  }
+
+  .fshell__foot-inner {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .fshell--contact .fshell__foot {
+    padding: 0;
+    display: block;
+    grid-column: span 6;
+  }
+
+  .fshell--contact .fshell__foot-inner {
+    gap: 14px;
+  }
+
+  .fshell__captcha-ph {
+    width: 320px;
+    max-width: 100%;
+    padding: 16px 18px;
+    border: 1.5px solid var(--c-border);
+    border-radius: 10px;
+    background: #fafafb;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .fshell__captcha-ph .box {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--c-placeholder-line);
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  .fshell__captcha-ph .t {
+    flex: 1;
+  }
+
+  .fshell__captcha-ph .m {
+    font: 500 11px var(--font-mono);
+    color: #6b6478;
+  }
+
+  .field-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-error);
+  }
+
+  .field-error:empty {
+    display: none;
+  }
+
+  .fshell__note {
+    font-size: 14px;
+    color: var(--c-text-muted);
+  }
+
+  .fshell__note .req {
+    color: var(--c-primary);
+  }
+
+  .fshell__status:empty {
+    display: none;
+  }
+
+  .fshell__status {
+    padding: 14px 18px;
+    border-radius: var(--r-field);
+    background: #fdecea;
+    color: var(--c-error);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .fshell__status :global(a) {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .fshell__submit {
+    border: 0;
+    padding: 17px 32px;
+    border-radius: var(--r-pill);
+    background: var(--c-primary);
+    color: #fff;
+    font: 600 17px var(--font-sans);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .fshell--contact .fshell__submit {
+    padding: 15px 28px;
+    font-size: 16px;
+  }
+
+  .fshell__submit:hover {
+    background: var(--c-primary-hover);
+  }
+
+  .fshell__submit[aria-busy='true'] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .fshell__success {
+    margin: var(--gap-tiles) var(--gutter-tiles) 0;
+    padding: 48px;
+    border-radius: var(--r-tile);
+    background: var(--c-primary);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .fshell__success h2 {
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .fshell__success a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .fshell__success:focus {
+    outline: none;
+  }
+
+  @media (max-width: 899.98px) {
+    .fshell__foot {
+      display: block;
+      padding: 24px 20px 0;
+    }
+
+    .fshell__foot-inner {
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .fshell--contact .fshell__foot {
+      padding: 0;
+    }
+
+    .fshell__captcha-ph {
+      width: auto;
+      padding: 14px 16px;
+      gap: 14px;
+    }
+
+    .fshell__captcha-ph .m {
+      font-size: 10px;
+    }
+
+    .fshell__note {
+      font-size: 13px;
+    }
+
+    .fshell__submit,
+    .fshell--contact .fshell__submit {
+      min-height: 52px;
+      padding: 0 24px;
+      font-size: 16px;
+    }
+
+    .fshell__success {
+      padding: 28px 24px;
+      font-size: 16px;
+    }
+
+    .fshell__success h2 {
+      font-size: 28px;
+    }
+  }
+</style>
+
+<script>
+  import { company } from '../../data/site';
+
+  const MSG = {
+    required: 'Bitte füllen Sie dieses Feld aus.',
+    email: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+    plz: 'Bitte geben Sie eine 4-stellige Postleitzahl ein.',
+    year: 'Bitte geben Sie ein Jahr ein (z. B. 2015).',
+    number: 'Bitte geben Sie eine Zahl ein.',
+    tel: 'Bitte geben Sie eine gültige Telefonnummer ein.',
+    captcha: 'Bitte bestätigen Sie, dass Sie kein Roboter sind.',
+    summary: 'Bitte prüfen Sie die markierten Felder.',
+    notConfigured: `Der Online-Versand ist noch nicht eingerichtet. Bitte rufen Sie uns an (<a href="${company.phone.href}">${company.phone.display}</a>) oder schreiben Sie an <a href="mailto:${company.email}">${company.email}</a>.`,
+    failed: `Leider konnte Ihre Anfrage nicht gesendet werden. Bitte versuchen Sie es erneut oder rufen Sie uns an: <a href="${company.phone.href}">${company.phone.display}</a>.`,
+  };
+
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  declare global {
+    interface Window {
+      grecaptcha?: { getResponse: (id?: number) => string; reset: (id?: number) => void };
+      bbsRecaptchaOk?: () => void;
+    }
+  }
+
+  window.bbsRecaptchaOk = () => {
+    document.querySelectorAll<HTMLElement>('[data-captcha-error]').forEach((e) => (e.textContent = ''));
+  };
+
+  function setError(ctrl: Control, msg: string) {
+    const field = ctrl.closest('.field');
+    field?.classList.toggle('has-error', !!msg);
+    const err = field?.querySelector<HTMLElement>('[data-error]');
+    if (err) err.textContent = msg;
+    if (msg) ctrl.setAttribute('aria-invalid', 'true');
+    else ctrl.removeAttribute('aria-invalid');
+  }
+
+  function checkFiles(input: HTMLInputElement): string {
+    const files = Array.from(input.files ?? []);
+    const maxFiles = Number(input.dataset.maxFiles ?? 5);
+    const maxMb = Number(input.dataset.maxMb ?? 10);
+    if (files.length > maxFiles) return `Bitte höchstens ${maxFiles} Dateien auswählen.`;
+    for (const f of files) {
+      const okType = f.type.startsWith('image/') || f.type === 'application/pdf';
+      if (!okType) return `«${f.name}» ist kein Bild und kein PDF.`;
+      if (f.size > maxMb * 1024 * 1024) return `«${f.name}» ist grösser als ${maxMb} MB.`;
+    }
+    return '';
+  }
+
+  function validate(ctrl: Control): string {
+    if (ctrl.disabled) return '';
+    if (ctrl instanceof HTMLInputElement && ctrl.type === 'file') {
+      if (ctrl.required && !ctrl.files?.length) return MSG.required;
+      return checkFiles(ctrl);
+    }
+    const v = ctrl.value.trim();
+    if (!v) return ctrl.required ? MSG.required : '';
+    const kind = ctrl.dataset.kind ?? (ctrl as HTMLInputElement).type;
+    if (kind === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return MSG.email;
+    if (kind === 'plz' && !/^\d{4}$/.test(v)) return MSG.plz;
+    if (kind === 'year' && !/^(19|20)\d{2}$/.test(v)) return MSG.year;
+    if (kind === 'number' && !/^\d+([.,]\d+)?$/.test(v)) return MSG.number;
+    if (kind === 'tel' && !/^[+\d][\d\s()/.-]{5,}$/.test(v)) return MSG.tel;
+    return '';
+  }
+
+  /** Abschnitte je nach Auswahl-Kachel ein-/ausblenden (z. B. Solar: neue / bestehende Anlage) */
+  function syncSections(form: HTMLFormElement) {
+    form.querySelectorAll<HTMLElement>('[data-show-when]').forEach((sec) => {
+      const [name, value] = (sec.dataset.showWhen ?? '').split('=');
+      if (!name) return;
+      const checked = form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);
+      const show = checked?.value === value;
+      sec.hidden = !show;
+      sec.querySelectorAll<Control>('input, select, textarea').forEach((c) => (c.disabled = !show));
+    });
+  }
+
+  function setupFile(input: HTMLInputElement) {
+    const drop = input.closest<HTMLElement>('.field__drop');
+    const list = drop?.querySelector<HTMLElement>('[data-file-list]');
+    const update = () => {
+      if (list) list.textContent = Array.from(input.files ?? []).map((f) => f.name).join(', ');
+      setError(input, checkFiles(input));
+    };
+    input.addEventListener('change', update);
+    ['dragenter', 'dragover'].forEach((t) => input.addEventListener(t, () => drop?.classList.add('is-dragover')));
+    ['dragleave', 'drop'].forEach((t) => input.addEventListener(t, () => drop?.classList.remove('is-dragover')));
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const controls = () => Array.from(form.querySelectorAll<Control>('[data-field]'));
+
+    syncSections(form);
+    form.querySelectorAll<HTMLInputElement>('[data-choice]').forEach((r) => r.addEventListener('change', () => syncSections(form)));
+    form.querySelectorAll<HTMLInputElement>('input[type="file"][data-field]').forEach(setupFile);
+
+    controls().forEach((c) => {
+      c.addEventListener('blur', () => {
+        if (c.value) setError(c, validate(c));
+      });
+      c.addEventListener('input', () => {
+        if (c.closest('.field')?.classList.contains('has-error')) setError(c, validate(c));
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.innerHTML = '';
+
+      let firstInvalid: Control | null = null;
+      for (const c of controls()) {
+        const msg = validate(c);
+        setError(c, msg);
+        if (msg && !firstInvalid) firstInvalid = c;
+      }
+
+      let captchaOk = true;
+      if (form.hasAttribute('data-recaptcha')) {
+        const token = window.grecaptcha?.getResponse() ?? '';
+        captchaOk = !!token;
+        const cErr = form.querySelector<HTMLElement>('[data-captcha-error]');
+        if (cErr) cErr.textContent = captchaOk ? '' : MSG.captcha;
+      }
+
+      if (firstInvalid || !captchaOk) {
+        status.textContent = MSG.summary;
+        (firstInvalid as HTMLElement | null)?.focus();
+        return;
+      }
+
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        status.innerHTML = MSG.notConfigured;
+        return;
+      }
+
+      submit.setAttribute('aria-busy', 'true');
+      submit.disabled = true;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        const success = document.querySelector<HTMLElement>(`[data-success-for="${form.id}"]`);
+        form.hidden = true;
+        form.closest('[data-form-wrap]')?.setAttribute('hidden', '');
+        if (success) {
+          success.hidden = false;
+          success.focus();
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } catch {
+        status.innerHTML = MSG.failed;
+        window.grecaptcha?.reset();
+      } finally {
+        submit.removeAttribute('aria-busy');
+        submit.disabled = false;
+      }
+    });
+  });
+</script>

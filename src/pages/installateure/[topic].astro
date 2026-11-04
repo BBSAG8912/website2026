@@ -1,0 +1,12 @@
+---
+import TopicPage from '../../components/TopicPage.astro';
+import { topicsOf, type Topic } from '../../data/topics';
+
+export function getStaticPaths() {
+  return topicsOf('installateure').map((topic) => ({ params: { topic: topic.slug }, props: { topic } }));
+}
+
+const { topic } = Astro.props as { topic: Topic };
+---
+
+<TopicPage topic={topic} />

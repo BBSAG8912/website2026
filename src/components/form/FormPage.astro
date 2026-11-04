@@ -1,0 +1,38 @@
+---
+/** Formularseite (6h, 6i, 6j): Titel · Auswahl-Kacheln · Abschnitte · reCAPTCHA · Absenden. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../PageIntro.astro';
+import type { Crumb } from '../Breadcrumb.astro';
+import ChoiceTiles from './ChoiceTiles.astro';
+import FormSection from './FormSection.astro';
+import FormShell from './FormShell.astro';
+import type { FormDef } from '../../data/forms';
+import { company } from '../../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs: Crumb[];
+  form: FormDef;
+}
+
+const { title, description, crumbs, form } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <PageIntro crumbs={crumbs} title={title} scale="form">
+    <span>oder anrufen: <a href={company.phone.href} class="phone">{company.phone.display}</a></span>
+  </PageIntro>
+
+  <FormShell id={`form-${form.id}`} formName={form.formName}>
+    <ChoiceTiles choice={form.choice} idPrefix={form.id} />
+    {form.sections.map((s) => <FormSection section={s} idPrefix={form.id} />)}
+  </FormShell>
+</BaseLayout>
+
+<style>
+  .phone {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+</style>

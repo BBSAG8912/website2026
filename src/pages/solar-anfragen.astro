@@ -1,0 +1,13 @@
+---
+/** 6i Solar anfragen – Felder sind ein Vorschlag (mit Kunde bestätigen). */
+import FormPage from '../components/form/FormPage.astro';
+import { solarForm } from '../data/forms';
+import { routes } from '../data/site';
+---
+
+<FormPage
+  title="Solar anfragen"
+  description="Anfrage für eine neue oder bestehende Solaranlage – Berger Boiler-Service AG."
+  crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Solar', href: routes.solar }, { label: 'Anfrage' }]}
+  form={solarForm}
+/>

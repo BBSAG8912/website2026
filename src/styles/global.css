@@ -73,6 +73,10 @@ p {
   flex: 1;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -127,10 +131,26 @@ p {
   padding-inline: var(--gutter-tiles);
 }
 
+.tile-grid + .tile-grid {
+  padding-top: var(--gap-tiles);
+}
+
 @media (max-width: 899.98px) {
   .tile-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .tile-grid--m2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.pad-tiles {
+  padding-inline: var(--gutter-tiles);
+}
+
+.todo-inline {
+  border-bottom: 1px dashed var(--c-placeholder-line);
 }
 
 @media (prefers-reduced-motion: reduce) {

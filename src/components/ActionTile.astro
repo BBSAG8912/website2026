@@ -1,0 +1,173 @@
+---
+/**
+ * Aktionskachel: violett (z. B. «Ersatzteil anfragen», «Nichts Passendes dabei?»)
+ * oder gestrichelt (Platzhalter für später, z. B. «Login für Partner»).
+ */
+import Button from './Button.astro';
+import Copy from './Copy.astro';
+
+interface Props {
+  title: string;
+  text?: string;
+  tone?: 'violet' | 'dashed';
+  ctaLabel?: string;
+  ctaHref?: string;
+  /** Deaktivierter Hinweis-Button (z. B. «Anmelden – folgt») – nur Desktop */
+  disabledLabel?: string;
+  size?: 'lg' | 'md';
+  headingLevel?: 'h2' | 'h3';
+}
+
+const {
+  title,
+  text,
+  tone = 'violet',
+  ctaLabel,
+  ctaHref,
+  disabledLabel,
+  size = 'lg',
+  headingLevel = 'h2',
+} = Astro.props;
+const Heading = headingLevel;
+const dark = tone === 'violet';
+---
+
+<div class:list={['action', `action--${tone}`, `action--${size}`]}>
+  <Heading class="action__title"><Copy text={title} onDark={dark} /></Heading>
+  {
+    text && (
+      <p class="action__text">
+        <Copy text={text} onDark={dark} />
+      </p>
+    )
+  }
+  {
+    ctaLabel && ctaHref && (
+      <Button href={ctaHref} variant="white" size="lg" arrow blockOnMobile class="action__cta">
+        <Copy text={ctaLabel} />
+      </Button>
+    )
+  }
+  {
+    disabledLabel && (
+      <span class="action__disabled" aria-disabled="true">
+        {disabledLabel}
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .action {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-radius: var(--r-tile);
+  }
+
+  .action--lg {
+    padding: 40px;
+    min-height: 260px;
+  }
+
+  .action--md {
+    padding: 32px;
+    gap: 12px;
+  }
+
+  .action--violet {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .action--dashed {
+    border: 1.5px dashed var(--c-placeholder-line);
+  }
+
+  .action__title {
+    font-size: 32px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .action--md .action__title {
+    font-size: 26px;
+    letter-spacing: 0;
+  }
+
+  .action__text {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .action--md .action__text {
+    font-size: 16px;
+  }
+
+  .action--violet .action__text {
+    color: var(--c-on-dark-soft);
+  }
+
+  .action :global(.action__cta) {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 14.5px 23.5px;
+  }
+
+  .action--md :global(.action__cta) {
+    margin-top: 0;
+    padding: 13.5px 21.5px;
+  }
+
+  .action__disabled {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 15px 24px;
+    border-radius: var(--r-pill);
+    background: var(--c-surface-tint);
+    color: var(--c-text-muted);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 899.98px) {
+    .action--lg,
+    .action--md {
+      min-height: 0;
+      padding: 24px;
+      gap: 12px;
+    }
+
+    .action--dashed {
+      gap: 10px;
+    }
+
+    .action__title,
+    .action--md .action__title {
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .action--md .action__title {
+      font-size: 22px;
+    }
+
+    .action__text,
+    .action--md .action__text {
+      font-size: 15px;
+    }
+
+    .action :global(.action__cta),
+    .action--md :global(.action__cta) {
+      margin-top: 0;
+      padding: 0 20px;
+    }
+
+    .action__disabled {
+      display: none;
+    }
+  }
+</style>

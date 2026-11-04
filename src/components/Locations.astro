@@ -1,0 +1,31 @@
+---
+/** Standorte als feste Foto-Spalten (Über uns, Kontakt). */
+import PhotoColumns from './PhotoColumns.astro';
+import { company } from '../data/site';
+
+interface Props {
+  height?: number;
+  mobileHeight?: number;
+}
+
+const { height = 420, mobileHeight = 170 } = Astro.props;
+
+const mapsUrl = (q: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+---
+
+<div class="pad-tiles">
+  <PhotoColumns
+    fixed
+    height={height}
+    titleSize={40}
+    mobileHeight={mobileHeight}
+    label="Standorte"
+    items={company.locations.map((l) => ({
+      n: l.label,
+      title: l.name,
+      text: `${l.street}, ${l.city}`,
+      imageHint: `Firmengebäude ${l.name}`,
+      links: [{ label: 'Route planen', href: mapsUrl(`${company.name}, ${l.street}, ${l.city}`) }],
+    }))}
+  />
+</div>

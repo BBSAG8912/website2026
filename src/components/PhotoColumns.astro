@@ -224,7 +224,7 @@ const cols = items.map((it, i) => ({
     font-weight: 700;
     letter-spacing: -0.02em;
     color: #fff;
-    hyphens: auto;
+    hyphens: manual; /* Trennstellen gezielt mit \u00AD setzen */
     overflow-wrap: break-word;
     text-wrap: balance;
   }
@@ -419,7 +419,6 @@ const cols = items.map((it, i) => ({
     .cols--home .col__title {
       font-size: var(--title-m);
       line-height: 1.02;
-      hyphens: auto;
     }
 
     .col__icon,

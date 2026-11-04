@@ -1,0 +1,311 @@
+---
+/** 6f Aktuelles: News-Liste | Offene Stellen + Spontanbewerbung. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Photo from '../components/Photo.astro';
+import ActionTile from '../components/ActionTile.astro';
+import Copy from '../components/Copy.astro';
+import { news, jobs } from '../data/news';
+import { company, routes } from '../data/site';
+
+const applyHref = `mailto:${company.email}?subject=${encodeURIComponent('Bewerbung')}`;
+---
+
+<BaseLayout title="Aktuelles" description="News und offene Stellen der Berger Boiler-Service AG.">
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Aktuelles' }]} title="Aktuelles" layout="stacked" />
+
+  <div class="cols">
+    <section class="news" aria-labelledby="news-h">
+      <div class="box-head">
+        <h2 id="news-h">News</h2>
+      </div>
+      <ul class="news__list">
+        {
+          news.map((n) => {
+            const Tag = n.href ? 'a' : 'div';
+            return (
+              <li>
+                <Tag class="news__item" href={n.href}>
+                  <div class="news__img">
+                    <Photo image={n.image} alt={n.imageAlt} sizes="180px" widths={[200, 400]} />
+                  </div>
+                  <div class="news__text">
+                    <span class="news__date">
+                      <Copy text={n.date} />
+                    </span>
+                    <h3 class="news__title">
+                      <Copy text={n.title} />
+                    </h3>
+                    <p class="news__teaser">
+                      <Copy text={n.teaser} />
+                    </p>
+                  </div>
+                </Tag>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+
+    <div class="side">
+      <section class="jobs" id="offene-stellen" aria-labelledby="jobs-h">
+        <div class="box-head">
+          <h2 id="jobs-h">Offene Stellen</h2>
+        </div>
+        <ul class="jobs__list">
+          {
+            jobs.map((j) => {
+              const Tag = j.href ? 'a' : 'div';
+              return (
+                <li>
+                  <Tag class="job" href={j.href}>
+                    <div class="job__text">
+                      <h3 class="job__title">
+                        <Copy text={j.title} />
+                      </h3>
+                      <span class="job__meta">
+                        <Copy text={j.meta} />
+                      </span>
+                    </div>
+                    <span class="job__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </Tag>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </section>
+
+      <ActionTile
+        size="md"
+        title="[Nichts Passendes dabei?]"
+        text="[Spontanbewerbung / Lehrstellen]"
+        ctaLabel="[Bewerben]"
+        ctaHref={applyHref}
+      />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .cols {
+    padding: 0 var(--gutter-tiles);
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: var(--gap-tiles);
+    align-items: start;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-tiles);
+  }
+
+  .box-head {
+    padding: 20px 20px 12px;
+  }
+
+  .box-head h2 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .news,
+  .jobs {
+    padding: 12px;
+    border-radius: var(--r-tile);
+  }
+
+  .news {
+    background: var(--c-surface-tint);
+  }
+
+  .jobs {
+    border: 1.5px solid var(--c-border);
+  }
+
+  .news__list,
+  .jobs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .jobs__list {
+    gap: 0;
+  }
+
+  .news__item {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 20px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--c-ink);
+    transition: box-shadow 0.2s;
+  }
+
+  a.news__item:hover {
+    color: var(--c-ink);
+    box-shadow: 0 4px 16px rgba(30, 26, 38, 0.08);
+  }
+
+  .news__img {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .news__text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0;
+  }
+
+  .news__date {
+    font: 500 13px var(--font-mono);
+    color: #6b6478;
+  }
+
+  .news__title {
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  .news__teaser {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .job {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    color: var(--c-ink);
+  }
+
+  a.job:hover {
+    background: var(--c-surface-tint);
+    color: var(--c-ink);
+  }
+
+  .job__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .job__title {
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .job__meta {
+    font-size: 15px;
+    color: var(--c-text-muted);
+  }
+
+  .job__arrow {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--c-surface-tint);
+    color: var(--c-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 899.98px) {
+    .cols {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .news,
+    .jobs {
+      padding: 8px;
+    }
+
+    .news__list {
+      gap: 6px;
+    }
+
+    .box-head {
+      padding: 16px 14px 8px;
+    }
+
+    .box-head h2 {
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .news__item {
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 12px;
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .news__img {
+      aspect-ratio: 1;
+      border-radius: 8px;
+    }
+
+    .news__text {
+      gap: 4px;
+      padding: 2px 0;
+    }
+
+    .news__date {
+      font-size: 12px;
+    }
+
+    .news__title {
+      font-size: 16px;
+    }
+
+    .news__teaser {
+      display: none;
+    }
+
+    .job {
+      min-height: 64px;
+      padding: 14px;
+      border-radius: 12px;
+    }
+
+    .job__text {
+      gap: 2px;
+    }
+
+    .job__title {
+      font-size: 17px;
+    }
+
+    .job__meta {
+      font-size: 14px;
+    }
+
+    .job__arrow {
+      width: 36px;
+      height: 36px;
+    }
+  }
+</style>

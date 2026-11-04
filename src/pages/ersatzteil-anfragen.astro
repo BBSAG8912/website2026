@@ -1,0 +1,13 @@
+---
+/** 6j Ersatzteil anfragen (Installateure) */
+import FormPage from '../components/form/FormPage.astro';
+import { partsForm } from '../data/forms';
+import { routes } from '../data/site';
+---
+
+<FormPage
+  title="Ersatzteil anfragen"
+  description="Offerte oder Bestellung für Boiler-Ersatzteile – für Installateure. Berger Boiler-Service AG."
+  crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Für Installateure', href: routes.installers }, { label: 'Anfrage' }]}
+  form={partsForm}
+/>

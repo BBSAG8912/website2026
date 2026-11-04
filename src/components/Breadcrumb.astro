@@ -1,0 +1,68 @@
+---
+/** Pfad «Startseite / Boiler / …». Letzter Eintrag = aktuelle Seite (ohne Link). */
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+  onDark?: boolean;
+}
+
+const { items, onDark = false } = Astro.props;
+---
+
+<nav aria-label="Pfad" class:list={['crumbs', { 'crumbs--dark': onDark }]}>
+  <ol>
+    {
+      items.map((c, i) => (
+        <li>
+          {c.href && i < items.length - 1 ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+  }
+
+  .crumbs li + li::before {
+    content: '/';
+    padding: 0 0.35em;
+  }
+
+  .crumbs a {
+    color: inherit;
+  }
+
+  .crumbs a:hover {
+    color: var(--c-primary-dark-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .crumbs--dark ol {
+    color: var(--c-on-dark-muted);
+  }
+
+  .crumbs--dark a:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 899.98px) {
+    .crumbs ol {
+      font-size: 13px;
+    }
+  }
+</style>

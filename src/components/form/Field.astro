@@ -1,0 +1,264 @@
+---
+/**
+ * Formularfeld (Label, Eingabe, Einheit, Fehlermeldung) im 6-Spalten-Raster.
+ * Auswahl ohne Werte → freies Textfeld (Werte beim Kunden offen).
+ */
+import type { FieldDef } from '../../data/forms';
+import { uploadRules } from '../../data/forms';
+
+interface Props {
+  field: FieldDef;
+  /** Präfix für eindeutige IDs */
+  idPrefix: string;
+}
+
+const { field, idPrefix } = Astro.props;
+const id = `${idPrefix}-${field.name}`;
+const errId = `${id}-err`;
+const type = field.type === 'select' && !(field.options && field.options.length) ? 'text' : (field.type ?? 'text');
+const describedBy = errId;
+const common = {
+  id,
+  name: field.name,
+  required: field.required || undefined,
+  autocomplete: field.autocomplete,
+  'aria-describedby': describedBy,
+  'data-field': '',
+};
+---
+
+<div
+  class:list={['field', `field--${type}`, { 'field--unit': !!field.unit }]}
+  style={`--span:${field.span};--mspan:${field.mspan ?? 6}`}
+>
+  <label class="field__label" for={id}>
+    {field.label}{field.required && <span class="field__req" aria-hidden="true"> *</span>}
+    {field.required && <span class="visually-hidden"> (Pflichtfeld)</span>}
+  </label>
+
+  {
+    type === 'textarea' ? (
+      <textarea class="field__control" rows="5" {...common} />
+    ) : type === 'select' ? (
+      <select class="field__control" {...common}>
+        <option value="">Bitte wählen</option>
+        {field.options!.map((o) => (
+          <option value={o}>{o}</option>
+        ))}
+      </select>
+    ) : type === 'file' ? (
+      <div class="field__drop">
+        <input
+          class="field__file"
+          type="file"
+          multiple
+          accept={uploadRules.accept}
+          data-max-files={uploadRules.maxFiles}
+          data-max-mb={uploadRules.maxFileMb}
+          {...common}
+          name={`${field.name}[]`}
+        />
+        <span class="field__drop-text" aria-hidden="true">
+          <span class="d">Datei hierher ziehen oder auswählen</span>
+          <span class="m">Foto aufnehmen oder auswählen</span>
+        </span>
+        <span class="field__files" data-file-list aria-live="polite" />
+      </div>
+    ) : (
+      <div class="field__wrap">
+        <input
+          class="field__control"
+          type={type === 'plz' || type === 'number' || type === 'year' ? 'text' : type}
+          inputmode={type === 'plz' || type === 'number' || type === 'year' ? 'numeric' : type === 'tel' ? 'tel' : undefined}
+          pattern={type === 'plz' ? '[0-9]{4}' : type === 'year' ? '(19|20)[0-9]{2}' : type === 'number' ? '[0-9]+([.,][0-9]+)?' : undefined}
+          maxlength={type === 'plz' || type === 'year' ? 4 : undefined}
+          data-kind={type}
+          {...common}
+        />
+        {field.unit && (
+          <span class="field__unit" aria-hidden="true">
+            {field.unit}
+          </span>
+        )}
+      </div>
+    )
+  }
+  {type === 'file' && <span class="field__help">Bilder oder PDF, max. {uploadRules.maxFiles} Dateien à {uploadRules.maxFileMb} MB</span>}
+  <span class="field__error" id={errId} data-error></span>
+</div>
+
+<style>
+  .field {
+    grid-column: span var(--span);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .field__label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .field__req {
+    color: var(--c-primary);
+  }
+
+  .field__wrap {
+    position: relative;
+  }
+
+  .field__control {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1.5px solid var(--field-border, transparent);
+    border-radius: var(--r-field);
+    background: var(--field-bg, var(--c-surface-tint));
+    color: var(--c-ink);
+    font: 500 16px var(--font-sans);
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .field--unit .field__control {
+    padding-right: 64px;
+  }
+
+  textarea.field__control {
+    height: 140px;
+    padding: 14px 16px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  select.field__control {
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235E5869' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+
+  .field__control:hover {
+    border-color: var(--c-border);
+  }
+
+  .field__control:focus {
+    outline: none;
+    border-color: var(--c-primary);
+    background-color: #fff;
+  }
+
+  .field__unit {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    pointer-events: none;
+  }
+
+  /* Datei-Upload */
+  .field__drop {
+    position: relative;
+    min-height: 72px;
+    padding: 14px 16px;
+    border: 1.5px dashed var(--c-placeholder-line);
+    border-radius: var(--r-field);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
+  }
+
+  .field__drop:hover,
+  .field__drop:focus-within,
+  .field__drop.is-dragover {
+    border-color: var(--c-primary);
+    background: var(--c-surface-tint);
+  }
+
+  .field__file {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .field__drop-text .m {
+    display: none;
+  }
+
+  .field__files {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+
+  .field__files:empty {
+    display: none;
+  }
+
+  .field__help {
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .field__error {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-error);
+  }
+
+  .field__error:empty {
+    display: none;
+  }
+
+  .field.has-error .field__control,
+  .field.has-error .field__drop {
+    border-color: var(--c-error);
+  }
+
+  @media (max-width: 899.98px) {
+    .field {
+      grid-column: span var(--mspan);
+    }
+
+    .field__control {
+      padding: 0 14px;
+    }
+
+    .field__drop-text .d {
+      display: none;
+    }
+
+    .field__drop-text .m {
+      display: inline;
+    }
+
+    .field__drop {
+      font-size: 13px;
+    }
+
+    textarea.field__control {
+      height: 120px;
+    }
+  }
+</style>

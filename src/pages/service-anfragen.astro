@@ -1,0 +1,13 @@
+---
+/** 6h Service anfragen (Boiler) – Ziel aller «Service anfragen»-Buttons. */
+import FormPage from '../components/form/FormPage.astro';
+import { serviceForm } from '../data/forms';
+import { routes } from '../data/site';
+---
+
+<FormPage
+  title="Service anfragen"
+  description="Offerte oder Auftrag für Boiler-Service, Entkalkung, Reparatur oder Ersatz anfragen – Berger Boiler-Service AG."
+  crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Service anfragen' }]}
+  form={serviceForm}
+/>

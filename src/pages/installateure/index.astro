@@ -1,0 +1,54 @@
+---
+/** 6d Für Installateure: Titel · 4 Foto-Spalten · Ersatzteil anfragen · Login für Partner (folgt). */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import PhotoColumns from '../../components/PhotoColumns.astro';
+import ActionTile from '../../components/ActionTile.astro';
+import Copy from '../../components/Copy.astro';
+import { topicsOf, topicHref } from '../../data/topics';
+import { routes } from '../../data/site';
+
+const items = topicsOf('installateure').map((t) => ({
+  title: t.title,
+  text: t.teaser,
+  image: t.image,
+  imageAlt: t.imageAlt,
+  imageHint: t.imageHint,
+  cta: { label: 'Mehr erfahren', href: topicHref(t) },
+}));
+---
+
+<BaseLayout title="Für Installateure" description="Boiler-Ersatzteile, Boiler-Verkauf, Elysator-Produkte und Serviceunterstützung für Installateure – Berger Boiler-Service AG.">
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Für Installateure' }]} title="Für Installateure" scale="xl-long">
+    <p><Copy text="[Einleitung: für wen und was angeboten wird]" /></p>
+  </PageIntro>
+
+  <div class="pad-tiles">
+    <PhotoColumns items={items} height={560} titleSize={30} mobileHeight={130} eagerImages label="Angebote für Installateure" />
+  </div>
+
+  <div class="actions">
+    <ActionTile
+      title="Ersatzteil anfragen"
+      text="[1 Satz: Angaben zu Boiler und Artikel, wir melden uns]"
+      ctaLabel="Zum Ersatzteil-Formular"
+      ctaHref={routes.formParts}
+    />
+    <ActionTile tone="dashed" title="Login für Partner" text="[später: Shop / Bestellungen]" disabledLabel="Anmelden – folgt" />
+  </div>
+</BaseLayout>
+
+<style>
+  .actions {
+    padding: var(--gap-tiles) var(--gutter-tiles) 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: var(--gap-tiles);
+  }
+
+  @media (max-width: 899.98px) {
+    .actions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

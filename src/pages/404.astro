@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Button from '../components/Button.astro';
+import { company, routes } from '../data/site';
+---
+
+<BaseLayout title="Seite nicht gefunden" noindex>
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Seite nicht gefunden' }]} title="Seite nicht gefunden" layout="stacked" scale="form">
+    <p>Diese Seite gibt es nicht (mehr). Vielleicht hilft Ihnen einer dieser Wege weiter:</p>
+  </PageIntro>
+  <div class="links">
+    <Button href={routes.home} variant="primary" size="lg">Zur Startseite</Button>
+    <Button href={routes.formService} variant="outline" size="lg">Service anfragen</Button>
+    <Button href={company.phone.href} variant="outline" size="lg">{company.phone.display}</Button>
+  </div>
+</BaseLayout>
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 var(--gutter-text);
+  }
+</style>

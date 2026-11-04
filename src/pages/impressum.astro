@@ -1,0 +1,35 @@
+---
+/** Impressum – bestätigte Firmendaten; restliche Angaben offen. */
+import LegalPage from '../components/LegalPage.astro';
+import Copy from '../components/Copy.astro';
+import { company } from '../data/site';
+---
+
+<LegalPage title="Impressum" description={`Impressum der ${company.name}.`}>
+  <h2>Verantwortlich für den Inhalt</h2>
+  <address>
+    <strong>{company.name}</strong><br />
+    {company.locations[0].street}<br />
+    {company.locations[0].city}<br />
+    Telefon <a href={company.phone.href}>{company.phone.display}</a><br />
+    E-Mail <a href={`mailto:${company.email}`}>{company.email}</a>
+  </address>
+
+  <h2>Weitere Standorte</h2>
+  {
+    company.locations.slice(1).map((l) => (
+      <p>
+        {l.street}, {l.city}
+      </p>
+    ))
+  }
+
+  <h2>Handelsregister</h2>
+  <p><Copy text="[UID / Handelsregister-Nummer]" /></p>
+
+  <h2>Vertretungsberechtigte Personen</h2>
+  <p><Copy text="[Namen]" /></p>
+
+  <h2>Haftungsausschluss und Urheberrechte</h2>
+  <p><Copy text="[Text Haftungsausschluss / Urheberrechte – vom Kunden bzw. Rechtsberatung]" /></p>
+</LegalPage>

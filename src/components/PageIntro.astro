@@ -1,0 +1,137 @@
+---
+/**
+ * Seitenkopf mit Pfad + grossem Titel.
+ * - layout «split»: Titel links, Slot rechts (Einleitung, Telefon …) – 6a, 6d, 6g, Formulare
+ * - layout «stacked»: alles untereinander – 6e, 6f
+ * - scale «xl»: 104px / mobil 52px · «xl-long»: 104px / mobil 40px · «form»: 80px / mobil 40px
+ */
+import Breadcrumb, { type Crumb } from './Breadcrumb.astro';
+
+interface Props {
+  crumbs: Crumb[];
+  title: string;
+  layout?: 'split' | 'stacked';
+  scale?: 'xl' | 'xl-long' | 'form';
+}
+
+const { crumbs, title, layout = 'split', scale = 'xl' } = Astro.props;
+---
+
+<section class:list={['intro', `intro--${layout}`, `intro--${scale}`]}>
+  <div class="intro__main">
+    <Breadcrumb items={crumbs} />
+    <h1 class="intro__title" lang="de">{title}</h1>
+  </div>
+  {
+    Astro.slots.has('default') && (
+      <div class="intro__aside">
+        <slot />
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .intro {
+    padding: 40px var(--gutter-text) 48px;
+  }
+
+  .intro--split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: end;
+  }
+
+  .intro--form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+
+  .intro--stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .intro__main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .intro__title {
+    font-size: clamp(64px, 8.2vw, 104px);
+    line-height: 0.92;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+
+  .intro--form .intro__title {
+    font-size: clamp(52px, 6.3vw, 80px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+
+  .intro__aside {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  .intro--form .intro__aside {
+    font-size: 17px;
+    flex: none;
+  }
+
+  @media (max-width: 899.98px) {
+    .intro,
+    .intro--split,
+    .intro--form,
+    .intro--stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 20px 20px 28px;
+    }
+
+    .intro--form {
+      gap: 10px;
+      padding-bottom: 24px;
+    }
+
+    .intro__main {
+      gap: 12px;
+    }
+
+    .intro--form .intro__main {
+      gap: 10px;
+    }
+
+    .intro__title {
+      font-size: 52px;
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+    }
+
+    .intro--xl-long .intro__title,
+    .intro--form .intro__title {
+      font-size: 40px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .intro__aside {
+      font-size: 16px;
+    }
+
+    .intro--form .intro__aside {
+      font-size: 15px;
+    }
+  }
+</style>

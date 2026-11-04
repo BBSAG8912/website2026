@@ -1,0 +1,105 @@
+---
+/** Vollbreites Foto mit Titel + Hauptaktion (6c Solar, 6k Korrosions- und Kalkschutz). */
+import type { ImageMetadata } from 'astro';
+import Breadcrumb, { type Crumb } from './Breadcrumb.astro';
+import Button from './Button.astro';
+import Photo from './Photo.astro';
+
+interface Props {
+  crumbs: Crumb[];
+  title: string;
+  ctaLabel: string;
+  ctaHref: string;
+  /** Titelgrösse Desktop / mobil in px */
+  titleSize?: number;
+  mobileTitleSize?: number;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  imageHint?: string;
+}
+
+const {
+  crumbs,
+  title,
+  ctaLabel,
+  ctaHref,
+  titleSize = 120,
+  mobileTitleSize = 72,
+  image,
+  imageAlt,
+  imageHint,
+} = Astro.props;
+---
+
+<section class="photo-hero" style={`--t:${titleSize}px;--t-m:${mobileTitleSize}px`}>
+  <Photo image={image} alt={imageAlt} hint={imageHint} loading="eager" sizes="100vw" widths={[800, 1200, 1600, 2400]} />
+  <div class="photo-hero__body">
+    <div class="photo-hero__text">
+      <Breadcrumb items={crumbs} onDark />
+      <h1 class="photo-hero__title" lang="de">{title}</h1>
+    </div>
+    <Button href={ctaHref} variant="white" size="lg" arrow blockOnMobile class="photo-hero__cta">{ctaLabel}</Button>
+  </div>
+</section>
+
+<style>
+  .photo-hero {
+    position: relative;
+    margin: 8px var(--gutter-tiles) 0;
+    height: 600px;
+    border-radius: var(--r-tile);
+    overflow: hidden;
+  }
+
+  .photo-hero__body {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    background: var(--photo-gradient);
+  }
+
+  .photo-hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .photo-hero__title {
+    font-size: min(var(--t), 9.4vw);
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    color: #fff;
+    hyphens: manual;
+  }
+
+  .photo-hero :global(.photo-hero__cta) {
+    flex: none;
+    padding: 14.5px 23.5px;
+  }
+
+  @media (max-width: 899.98px) {
+    .photo-hero {
+      margin-top: 4px;
+      height: 460px;
+    }
+
+    .photo-hero__body {
+      padding: 24px 20px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 14px;
+    }
+
+    .photo-hero__title {
+      font-size: var(--t-m);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+  }
+</style>

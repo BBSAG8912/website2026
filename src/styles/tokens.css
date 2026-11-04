@@ -21,6 +21,8 @@
   --c-on-dark-link-hover: #d9cdf2;
   --c-white-hover: #efeaf8;
   --c-white: #ffffff;
+  /* Fehlerfarbe (nicht im Design definiert; WCAG-AA auf Weiss) */
+  --c-error: #b42318;
 
   --photo-placeholder: repeating-linear-gradient(135deg, var(--c-photo-a) 0 12px, var(--c-photo-b) 12px 24px);
   --photo-gradient: linear-gradient(to top, rgba(24, 19, 34, 0.88), rgba(24, 19, 34, 0));

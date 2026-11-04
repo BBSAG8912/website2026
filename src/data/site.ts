@@ -14,8 +14,8 @@ export const company = {
   email: 'berger@boiler-service.ch',
   instagram: 'https://www.instagram.com/boiler.service/',
   locations: [
-    { name: 'Obfelden', street: 'Räschstrasse 31', city: '8912 Obfelden' },
-    { name: 'Bubikon', street: 'Rosswiesstrasse 23', city: '8608 Bubikon' },
+    { label: 'Hauptsitz', name: 'Obfelden', street: 'Räschstrasse 31', city: '8912 Obfelden' },
+    { label: 'Standort', name: 'Bubikon', street: 'Rosswiesstrasse 23', city: '8608 Bubikon' },
   ],
 } as const;
 

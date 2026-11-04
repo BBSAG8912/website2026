@@ -1,0 +1,60 @@
+---
+/**
+ * Angebotsseite mit Vollbild-Foto (6c Solar, 6k Korrosions- und Kalkschutz):
+ * Foto + Titel · Kernaussage/Einleitung · 3 Textkacheln · Projekte · Warum wir · violetter CTA.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoHero from './PhotoHero.astro';
+import LeadSplit from './LeadSplit.astro';
+import TextTile from './TextTile.astro';
+import SectionTitle from './SectionTitle.astro';
+import ProjectTiles from './ProjectTiles.astro';
+import StepTile from './StepTile.astro';
+import CtaBlock from './CtaBlock.astro';
+import { whyUs, placeholderProjects } from '../data/topics';
+import { routes } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  heroHint: string;
+  titleSize: number;
+  mobileTitleSize: number;
+  ctaLabel: string;
+  ctaHref: string;
+  statement: string;
+  ctaTitle: string;
+}
+
+const { title, description, heroHint, titleSize, mobileTitleSize, ctaLabel, ctaHref, statement, ctaTitle } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <PhotoHero
+    crumbs={[{ label: 'Startseite', href: routes.home }, { label: title }]}
+    title={title}
+    ctaLabel={ctaLabel}
+    ctaHref={ctaHref}
+    titleSize={titleSize}
+    mobileTitleSize={mobileTitleSize}
+    imageHint={heroHint}
+  />
+
+  <LeadSplit statement={statement} intro="[Einleitung: Angebot, für wen, Nutzen]" />
+
+  <div class="tile-grid">
+    <TextTile title="[Abschnitt 1]" text="[2–3 Sätze]" />
+    <TextTile title="[Abschnitt 2]" text="[2–3 Sätze]" />
+    <TextTile title="[Abschnitt 3]" text="[2–3 Sätze]" />
+  </div>
+
+  <SectionTitle title="[Projekte / Referenzen]" />
+  <ProjectTiles items={placeholderProjects} label="Projekte und Referenzen" />
+
+  <SectionTitle title="Warum Sie bei uns richtig sind" />
+  <div class="tile-grid tile-grid--m2" style="--cols: 4">
+    {whyUs.map((w, i) => <StepTile tone="soft" n={i + 1} title={w.title} text={w.text} />)}
+  </div>
+
+  <CtaBlock title={ctaTitle} ctaLabel={ctaLabel} ctaHref={ctaHref} />
+</BaseLayout>

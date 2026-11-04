@@ -1,0 +1,28 @@
+---
+/** 6a Boiler: Pfad + Titel + Einleitung · Foto-Spalten der Unterthemen. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import PhotoColumns from '../../components/PhotoColumns.astro';
+import Copy from '../../components/Copy.astro';
+import { topicsOf, topicHref } from '../../data/topics';
+import { routes } from '../../data/site';
+
+const items = topicsOf('boiler').map((t) => ({
+  title: t.title,
+  text: t.teaser,
+  image: t.image,
+  imageAlt: t.imageAlt,
+  imageHint: t.imageHint,
+  cta: { label: 'Mehr erfahren', href: topicHref(t) },
+}));
+---
+
+<BaseLayout title="Boiler" description="Service, Entkalkung, Reparatur und Ersatz von Boilern – Berger Boiler-Service AG, Ihr Warmwasserspezialist seit 1992.">
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Boiler' }]} title="Boiler">
+    <p><Copy text="[Einleitung: 2–3 Sätze zum Bereich Boiler]" /></p>
+  </PageIntro>
+
+  <div class="pad-tiles">
+    <PhotoColumns items={items} height={580} titleSize={40} mobileHeight={150} eagerImages label="Boiler-Themen" />
+  </div>
+</BaseLayout>

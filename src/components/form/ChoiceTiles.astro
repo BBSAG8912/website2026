@@ -1,0 +1,141 @@
+---
+/** Auswahl-Kacheln (z. B. Offerte | Auftrag) – barrierefrei als Radio-Buttons. */
+import type { ChoiceDef } from '../../data/forms';
+
+interface Props {
+  choice: ChoiceDef;
+  idPrefix: string;
+}
+
+const { choice, idPrefix } = Astro.props;
+---
+
+<fieldset class="choices">
+  <legend class="visually-hidden">{choice.legend}</legend>
+  {
+    choice.options.map((o, i) => (
+      <label class="choice" for={`${idPrefix}-${choice.name}-${i}`}>
+        <input
+          class="choice__input"
+          type="radio"
+          id={`${idPrefix}-${choice.name}-${i}`}
+          name={choice.name}
+          value={o.value}
+          checked={i === 0}
+          data-choice
+        />
+        <span class="choice__ring" aria-hidden="true" />
+        <span class="choice__label">{o.label}</span>
+      </label>
+    ))
+  }
+</fieldset>
+
+<style>
+  .choices {
+    margin: 0;
+    padding: 0 var(--gutter-tiles);
+    border: 0;
+    display: flex;
+    gap: var(--gap-tiles);
+  }
+
+  .choice {
+    position: relative;
+    flex: 1;
+    height: 160px;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+    color: var(--c-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.25s,
+      color 0.25s;
+  }
+
+  .choice:hover {
+    background: var(--c-surface-tint-hover);
+  }
+
+  .choice__input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .choice__ring {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--c-placeholder-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .choice__ring::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  .choice__label {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .choice:has(.choice__input:checked) {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .choice:has(.choice__input:checked) .choice__ring {
+    border-color: #fff;
+  }
+
+  .choice:has(.choice__input:checked) .choice__ring::after {
+    background: #fff;
+  }
+
+  .choice:has(.choice__input:focus-visible) {
+    outline: 2px solid var(--c-primary);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 899.98px) {
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .choice {
+      height: 110px;
+      padding: 16px 18px;
+    }
+
+    .choice__ring {
+      width: 22px;
+      height: 22px;
+    }
+
+    .choice__ring::after {
+      width: 10px;
+      height: 10px;
+    }
+
+    .choice__label {
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+  }
+</style>

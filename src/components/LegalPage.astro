@@ -1,0 +1,54 @@
+---
+/** Einfache Textseite (Impressum, Datenschutz). */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from './PageIntro.astro';
+import { routes } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} compactFooter>
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: title }]} title={title} layout="stacked" scale="form" />
+  <div class="legal">
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+    padding: 0 var(--gutter-text);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--c-ink);
+  }
+
+  .legal :global(h2) {
+    margin: 40px 0 12px;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .legal :global(p),
+  .legal :global(address) {
+    margin: 0 0 12px;
+    font-style: normal;
+  }
+
+  @media (max-width: 899.98px) {
+    .legal {
+      padding: 0 20px;
+      font-size: 16px;
+    }
+
+    .legal :global(h2) {
+      margin-top: 32px;
+      font-size: 20px;
+    }
+  }
+</style>

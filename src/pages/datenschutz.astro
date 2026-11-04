@@ -1,0 +1,34 @@
+---
+/**
+ * Datenschutzerklärung – Text vom Kunden bzw. Rechtsberatung (revDSG).
+ * Technische Punkte, die erwähnt werden müssen: Formulardaten (inkl. Uploads),
+ * Google reCAPTCHA (Formulare), Google Maps-Links, Hosting-Anbieter.
+ * Schriften werden selbst gehostet (kein Google Fonts).
+ */
+import LegalPage from '../components/LegalPage.astro';
+import Copy from '../components/Copy.astro';
+import { company } from '../data/site';
+---
+
+<LegalPage title="Datenschutz" description={`Datenschutzerklärung der ${company.name}.`}>
+  <p><Copy text="[Datenschutzerklärung – Text vom Kunden bzw. Rechtsberatung]" /></p>
+
+  <h2>Verantwortliche Stelle</h2>
+  <address>
+    {company.name}<br />
+    {company.locations[0].street}, {company.locations[0].city}<br />
+    <a href={`mailto:${company.email}`}>{company.email}</a>
+  </address>
+
+  <h2>Kontakt- und Anfrageformulare</h2>
+  <p><Copy text="[Welche Daten, Zweck, Aufbewahrung, Empfänger]" /></p>
+
+  <h2>Google reCAPTCHA</h2>
+  <p><Copy text="[Hinweis zum Einsatz von Google reCAPTCHA in den Anfrageformularen]" /></p>
+
+  <h2>Hosting</h2>
+  <p><Copy text="[Hosting-Anbieter und Server-Logfiles]" /></p>
+
+  <h2>Ihre Rechte</h2>
+  <p><Copy text="[Auskunft, Berichtigung, Löschung]" /></p>
+</LegalPage>

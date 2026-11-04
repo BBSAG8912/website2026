@@ -1,0 +1,13 @@
+---
+/** Abschnittstitel (H2): 40px Desktop / 28px mobil, 80px bzw. 48px Abstand oben. */
+import Copy from './Copy.astro';
+
+interface Props {
+  title: string;
+  id?: string;
+}
+
+const { title, id } = Astro.props;
+---
+
+<h2 class="section-title" id={id}><Copy text={title} /></h2>

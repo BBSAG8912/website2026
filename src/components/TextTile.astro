@@ -6,13 +6,15 @@ interface Props {
   title: string;
   text: string;
   headingLevel?: 'h3' | 'h4';
+  /** «lg»: Über uns (28px Titel, 40px Innenabstand) */
+  size?: 'md' | 'lg';
 }
 
-const { title, text, headingLevel = 'h3' } = Astro.props;
+const { title, text, headingLevel = 'h3', size = 'md' } = Astro.props;
 const Heading = headingLevel;
 ---
 
-<div class="text-tile">
+<div class:list={['text-tile', `text-tile--${size}`]}>
   <Heading class="text-tile__title"><Copy text={title} /></Heading>
   <p class="text-tile__text"><Copy text={text} /></p>
   <slot />
@@ -41,6 +43,16 @@ const Heading = headingLevel;
     color: var(--c-text-muted);
   }
 
+  .text-tile--lg {
+    min-height: 260px;
+    padding: 40px;
+  }
+
+  .text-tile--lg .text-tile__title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
   @media (max-width: 899.98px) {
     .text-tile {
       min-height: 0;
@@ -49,6 +61,13 @@ const Heading = headingLevel;
     }
     .text-tile__title {
       font-size: 20px;
+    }
+    .text-tile--lg {
+      min-height: 0;
+      padding: 24px;
+    }
+    .text-tile--lg .text-tile__title {
+      font-size: 22px;
     }
     .text-tile__text {
       font-size: 15px;

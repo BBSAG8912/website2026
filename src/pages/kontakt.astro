@@ -1,0 +1,133 @@
+---
+/** 6g Kontakt: Titel + grosse Telefonnummer · Standorte · Kontaktformular. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Locations from '../components/Locations.astro';
+import Copy from '../components/Copy.astro';
+import FormShell from '../components/form/FormShell.astro';
+import Field from '../components/form/Field.astro';
+import { contactFields } from '../data/forms';
+import { company, routes } from '../data/site';
+---
+
+<BaseLayout title="Kontakt" description={`Kontakt Berger Boiler-Service AG: ${company.phone.display}, ${company.email}. Standorte Obfelden und Bubikon.`}>
+  <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Kontakt' }]} title="Kontakt">
+    <div class="reach">
+      <a href={company.phone.href} class="reach__phone">{company.phone.display}</a>
+      <span class="reach__more">
+        <a href={`mailto:${company.email}`}>{company.email}</a> · <Copy text="[Erreichbarkeit]" />
+      </span>
+    </div>
+  </PageIntro>
+
+  <Locations />
+
+  <section class="contact" id="kontaktformular" aria-labelledby="contact-h">
+    <div class="contact__intro">
+      <h2 id="contact-h">Nachricht senden</h2>
+      <p>Für Serviceanfragen bitte das Formular <a href={routes.formService}>«Service anfragen»</a> nutzen.</p>
+    </div>
+    <FormShell id="form-kontakt" formName="Kontaktformular" submitLabel="Senden" variant="contact" recaptcha={false} successTitle="Vielen Dank für Ihre Nachricht">
+      <div class="contact__grid">
+        {contactFields.map((f) => <Field field={f} idPrefix="kontakt" />)}
+      </div>
+    </FormShell>
+  </section>
+</BaseLayout>
+
+<style>
+  .reach {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .reach__phone {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--c-primary);
+  }
+
+  .reach__more {
+    font-size: 16px;
+  }
+
+  .contact {
+    margin: var(--gap-tiles) var(--gutter-tiles) 0;
+    padding: 48px;
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 48px;
+    --field-bg: #fff;
+    --field-border: var(--c-border);
+  }
+
+  .contact__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .contact__intro h2 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .contact__intro p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .contact :global(form) {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .contact__grid {
+    grid-column: span 6;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .contact :global(.fshell__success) {
+    grid-column: 2;
+    margin: 0;
+  }
+
+  @media (max-width: 899.98px) {
+    .reach__phone {
+      font-size: 32px;
+    }
+
+    .reach__more {
+      font-size: 15px;
+    }
+
+    .contact {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 24px;
+      gap: 14px;
+    }
+
+    .contact__intro h2 {
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .contact__intro p {
+      font-size: 14px;
+    }
+
+    .contact :global(.fshell__success) {
+      grid-column: auto;
+    }
+  }
+</style>

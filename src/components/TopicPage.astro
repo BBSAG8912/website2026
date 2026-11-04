@@ -1,0 +1,64 @@
+---
+/**
+ * Themenseite (Vorlage 6b): Einstieg · So läuft es ab · 3 Textkacheln · Häufige Fragen ·
+ * weitere Themen derselben Rubrik.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopicHero from './TopicHero.astro';
+import SectionTitle from './SectionTitle.astro';
+import StepTile from './StepTile.astro';
+import TextTile from './TextTile.astro';
+import Faq from './Faq.astro';
+import PhotoColumns from './PhotoColumns.astro';
+import { type Topic, sections, topicHref, topicsOf } from '../data/topics';
+import { routes } from '../data/site';
+
+interface Props {
+  topic: Topic;
+}
+
+const { topic } = Astro.props;
+const section = sections[topic.section];
+const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
+---
+
+<BaseLayout title={topic.title} description={`${topic.title} – ${section.title}. Berger Boiler-Service AG, Ihr Warmwasserspezialist seit 1992.`}>
+  <TopicHero
+    crumbs={[{ label: 'Startseite', href: routes.home }, { label: section.title, href: section.href }, { label: topic.title }]}
+    title={topic.title}
+    intro={topic.intro}
+    ctaLabel={section.ctaLabel}
+    ctaHref={section.ctaHref}
+    image={topic.image}
+    imageAlt={topic.imageAlt}
+    imageHint={topic.imageHint}
+  />
+
+  <SectionTitle title="[So läuft es ab]" />
+  <div class="tile-grid">
+    {topic.steps.map((s, i) => <StepTile n={i + 1} title={s.title} text={s.text} />)}
+  </div>
+  <div class="tile-grid">
+    {topic.blocks.map((b) => <TextTile title={b.title} text={b.text} />)}
+  </div>
+
+  <Faq items={topic.faqs} />
+
+  <SectionTitle title={section.siblingsTitle} />
+  <div class="pad-tiles">
+    <PhotoColumns
+      height={380}
+      titleSize={36}
+      mobileHeight={130}
+      items={siblings.map((s) => ({
+        n: '',
+        title: s.title,
+        text: '[1 Satz]',
+        image: s.image,
+        imageAlt: s.imageAlt,
+        imageHint: s.imageHint,
+        cta: { label: 'Zum Thema', href: topicHref(s) },
+      }))}
+    />
+  </div>
+</BaseLayout>
