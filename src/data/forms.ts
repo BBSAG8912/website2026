@@ -81,7 +81,7 @@ export const serviceForm: FormDef = {
     {
       key: 'boiler',
       title: 'Ihr Boiler',
-      hint: '[Hinweis: Angaben stehen auf dem Typenschild]',
+      hint: 'Die Angaben finden Sie auf dem Typenschild des Boilers.',
       fields: [
         { name: 'boiler_marke', label: 'Boiler-Marke', type: 'select', options: boilerBrands, span: 2 },
         { name: 'boiler_typ', label: 'Boiler-Typ', span: 2 },

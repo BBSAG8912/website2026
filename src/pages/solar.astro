@@ -6,12 +6,27 @@ import { routes } from '../data/site';
 
 <OfferPage
   title="Solar"
-  description="Solaranlagen für Warmwasser – Beratung, Ausführung und Service von Berger Boiler-Service AG."
+  description="Solaranlagen für Warmwasser und eigenen Strom – Beratung und Ausführung von Berger Boiler-Service AG, seit über 30 Jahren."
   heroHint="Solaranlage auf Hausdach"
   titleSize={120}
   mobileTitleSize={72}
   ctaLabel="Solar anfragen"
   ctaHref={routes.formSolar}
-  statement="[Kernaussage zu Solar]"
-  ctaTitle="[Interesse an Solar?]"
+  statement="Seit über 30 Jahren bauen wir Solaranlagen."
+  intro="Wir beraten Sie zu Solaranlagen für Warmwasser und zur Produktion von eigenem Strom. Unser Bereich Erneuerbare Energien mit eigenen Solarmitarbeitenden setzt Ihre Anlage um."
+  blocks={[
+    { title: '[Abschnitt 1]', text: '[2–3 Sätze]' },
+    { title: '[Abschnitt 2]', text: '[2–3 Sätze]' },
+    {
+      title: 'Wir bilden aus',
+      text: 'Unter der Leitung von Silvan Lier, Leiter Erneuerbare Energien und Berufsbildner, bilden wir Solarinstallateurinnen und Solarinstallateure EFZ aus.',
+    },
+  ]}
+  projects={[
+    { title: 'Die Volldachlösung im Brüttental', meta: 'Wärme und Strom' },
+    { title: '[Projekt 2]', meta: '[Ort · Jahr]' },
+    { title: '[Projekt 3]', meta: '[Ort · Jahr]' },
+    { title: '[Projekt 4]', meta: '[Ort · Jahr]' },
+  ]}
+  ctaTitle="Interesse an Solar?"
 />

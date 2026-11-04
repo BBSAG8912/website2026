@@ -8,7 +8,7 @@ import PhotoHero from './PhotoHero.astro';
 import LeadSplit from './LeadSplit.astro';
 import TextTile from './TextTile.astro';
 import SectionTitle from './SectionTitle.astro';
-import ProjectTiles from './ProjectTiles.astro';
+import ProjectTiles, { type Project } from './ProjectTiles.astro';
 import StepTile from './StepTile.astro';
 import CtaBlock from './CtaBlock.astro';
 import { whyUs, placeholderProjects } from '../data/topics';
@@ -24,9 +24,27 @@ interface Props {
   ctaHref: string;
   statement: string;
   ctaTitle: string;
+  intro?: string;
+  blocks?: { title: string; text: string }[];
+  projects?: Project[];
 }
 
-const { title, description, heroHint, titleSize, mobileTitleSize, ctaLabel, ctaHref, statement, ctaTitle } = Astro.props;
+const placeholderBlocks = [1, 2, 3].map((n) => ({ title: `[Abschnitt ${n}]`, text: '[2–3 Sätze]' }));
+
+const {
+  title,
+  description,
+  heroHint,
+  titleSize,
+  mobileTitleSize,
+  ctaLabel,
+  ctaHref,
+  statement,
+  ctaTitle,
+  intro = '[Einleitung: Angebot, für wen, Nutzen]',
+  blocks = placeholderBlocks,
+  projects = placeholderProjects,
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -40,16 +58,14 @@ const { title, description, heroHint, titleSize, mobileTitleSize, ctaLabel, ctaH
     imageHint={heroHint}
   />
 
-  <LeadSplit statement={statement} intro="[Einleitung: Angebot, für wen, Nutzen]" />
+  <LeadSplit statement={statement} intro={intro} />
 
   <div class="tile-grid">
-    <TextTile title="[Abschnitt 1]" text="[2–3 Sätze]" />
-    <TextTile title="[Abschnitt 2]" text="[2–3 Sätze]" />
-    <TextTile title="[Abschnitt 3]" text="[2–3 Sätze]" />
+    {blocks.map((b) => <TextTile title={b.title} text={b.text} />)}
   </div>
 
-  <SectionTitle title="[Projekte / Referenzen]" />
-  <ProjectTiles items={placeholderProjects} label="Projekte und Referenzen" />
+  <SectionTitle title="Projekte und Referenzen" />
+  <ProjectTiles items={projects} label="Projekte und Referenzen" />
 
   <SectionTitle title="Warum Sie bei uns richtig sind" />
   <div class="tile-grid tile-grid--m2" style="--cols: 4">

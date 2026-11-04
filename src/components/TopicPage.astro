@@ -34,7 +34,7 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
     imageHint={topic.imageHint}
   />
 
-  <SectionTitle title="[So läuft es ab]" />
+  <SectionTitle title="So läuft es ab" />
   <div class="tile-grid">
     {topic.steps.map((s, i) => <StepTile n={i + 1} title={s.title} text={s.text} />)}
   </div>
@@ -53,7 +53,7 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
       items={siblings.map((s) => ({
         n: '',
         title: s.title,
-        text: '[1 Satz]',
+        text: s.teaser,
         image: s.image,
         imageAlt: s.imageAlt,
         imageHint: s.imageHint,

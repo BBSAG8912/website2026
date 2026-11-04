@@ -10,12 +10,39 @@ import Copy from '../components/Copy.astro';
 import { routes } from '../data/site';
 
 /** Team: Einträge ergänzen, sobald Namen/Funktionen/Porträts vorliegen. */
-const team: { name: string; role: string }[] = Array.from({ length: 8 }, () => ({ name: '[Name]', role: '[Funktion]' }));
+const team: { name: string; role: string }[] = [
+  { name: 'Lukas Berger', role: 'Geschäftsleitung, Servicetechniker / VR' },
+  { name: 'Helen Berger', role: 'Geschäftsleitung, Administration / VR' },
+  { name: 'Davide Luongo', role: 'Geschäftsleitung, Serviceleiter' },
+  { name: 'Judith Künzli', role: 'Administration' },
+  { name: 'Patrick Graf', role: 'Administration' },
+  { name: 'Patrick Rüttimann', role: 'Administration' },
+  { name: 'Chrigel Egli', role: 'Administration' },
+  { name: 'Olivia Thalparpan', role: 'Administration Teilzeit' },
+  { name: 'Kevin Calzada', role: 'Administration Solar' },
+  { name: 'Sara Berger', role: 'Administration Teilzeit' },
+  { name: 'Lukas Gabriel', role: 'Betriebsmitarbeiter' },
+  { name: 'Christoph Zehnder', role: 'Solarmitarbeiter / Servicetechniker' },
+  { name: 'Silvan Lier', role: 'Leiter Erneuerbare Energien / Berufsbildner' },
+  { name: 'Fabio Brignoli', role: 'Servicetechniker' },
+  { name: 'Paolo Appella', role: 'Servicetechniker' },
+  { name: 'Giuseppe Luongo', role: 'Servicetechniker' },
+  { name: 'Lüc Kurmann', role: 'Servicetechniker' },
+  { name: 'Kevin Carpintero', role: 'Servicetechniker' },
+  { name: 'Roberto Ramorino', role: 'Servicetechniker' },
+  { name: 'Hugo Carpintero', role: 'Servicetechniker, Standort Bubikon' },
+  { name: 'Luca Di Giacomo', role: 'Solarmitarbeiter / Servicetechniker' },
+  { name: 'Stefan Frutiger', role: 'Solarmitarbeiter / Servicemonteur' },
+  { name: 'Daniel Rüttimann', role: 'Solarmitarbeiter / Servicemonteur' },
+  { name: 'Nao Knill', role: 'Solarinstallateur EFZ in Ausbildung' },
+  { name: 'Cyril Hess', role: 'Solarinstallateur EFZ in Ausbildung' },
+  { name: 'Nils Berger', role: '[Funktion]' },
+];
 ---
 
 <BaseLayout title="Über uns" description="Berger Boiler-Service AG – Ihr Warmwasserspezialist seit 1992, Elysator Servicestelle mit Standorten in Obfelden und Bubikon." compactFooter>
   <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Über uns' }]} title="Über uns" layout="stacked">
-    <p class="lead"><Copy text="[1–2 Sätze: wer wir sind]" /></p>
+    <p class="lead"><Copy text="Wir sind ein kleiner, familiärer Betrieb aus Obfelden und seit über 30 Jahren auf Warmwasser spezialisiert: Boiler, Solar sowie Korrosions- und Kalkschutz." /></p>
   </PageIntro>
 
   <div class="team-photo">
@@ -23,8 +50,16 @@ const team: { name: string; role: string }[] = Array.from({ length: 8 }, () => (
   </div>
 
   <div class="tile-grid" style="--cols: 2; padding-top: var(--gap-tiles)">
-    <TextTile size="lg" title="Geschichte" text="[Text]" />
-    <TextTile size="lg" title="Werte und Arbeitsweise" text="[Text]" />
+    <TextTile
+      size="lg"
+      title="Geschichte"
+      text="Seit 1992 kümmern wir uns um Boiler, Solaranlagen sowie Korrosions- und Kalkschutz. Heute arbeiten wir vom Hauptsitz in Obfelden und von der Filiale Ost in Bubikon aus, sind technischer Kundendienst für Elysator und bilden Solarinstallateurinnen und Solarinstallateure EFZ aus."
+    />
+    <TextTile
+      size="lg"
+      title="Werte und Arbeitsweise"
+      text="Wir halten Unterbrüche beim Warmwasser so kurz wie möglich, reparieren und pflegen statt vorschnell zu ersetzen und prüfen Temperatur, Ventile und Korrosionsschutz. Wir arbeiten mit Netto-Pauschalpreisen inklusive Anfahrt, Kleinmaterial und Dichtungen und setzen auf Solarenergie."
+    />
   </div>
 
   <SectionTitle title="Team" />
