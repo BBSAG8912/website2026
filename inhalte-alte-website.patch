@@ -1,0 +1,588 @@
+From 850e3ecb4effd64170d1b4f2b6c961dc91575e02 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 4 Nov 2026 16:51:29 +0100
+Subject: [PATCH] =?UTF-8?q?Inhalte=20der=20bisherigen=20Website=20=C3=BCbe?=
+ =?UTF-8?q?rnommen?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Texte aus boiler-service.ch in Startseite, Boiler-, Installateur-,
+Solar-, Korrosions-, Über-uns-, Aktuelles- und Impressum-Seite eingesetzt.
+Was die alte Seite nicht hergibt, bleibt als [Platzhalter] markiert.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016XK3F462LXDQVm9k4qMHEz
+---
+ src/components/Footer.astro               |   4 +-
+ src/components/OfferPage.astro            |  32 +++--
+ src/components/TopicPage.astro            |   4 +-
+ src/data/forms.ts                         |   2 +-
+ src/data/news.ts                          |  27 ++--
+ src/data/topics.ts                        | 145 +++++++++++++++++++---
+ src/pages/aktuelles.astro                 |   4 +-
+ src/pages/boiler/index.astro              |   2 +-
+ src/pages/impressum.astro                 |   6 +-
+ src/pages/index.astro                     |   8 +-
+ src/pages/installateure/index.astro       |   4 +-
+ src/pages/korrosions-und-kalkschutz.astro |  21 +++-
+ src/pages/solar.astro                     |  21 +++-
+ src/pages/ueber-uns.astro                 |  43 ++++++-
+ 14 files changed, 260 insertions(+), 63 deletions(-)
+
+diff --git a/src/components/Footer.astro b/src/components/Footer.astro
+index d56e204..ee22fc8 100644
+--- a/src/components/Footer.astro
++++ b/src/components/Footer.astro
+@@ -20,8 +20,8 @@ interface Props {
+ const {
+   compact = false,
+   spaceTop = 'section',
+-  aboutText = '[Kurztext zur Firma]',
+-  newsText = '[neuester Beitrag / Anzahl offener Stellen]',
++  aboutText = 'Kleiner, familiärer Betrieb aus Obfelden – seit 1992 spezialisiert auf Boiler, Solar sowie Korrosions- und Kalkschutz.',
++  newsText = 'Offene Stelle: Heizungsinstallateur/in EFZ mit Solarerfahrung.',
+ } = Astro.props;
+ 
+ const tiles = [
+diff --git a/src/components/OfferPage.astro b/src/components/OfferPage.astro
+index 6798f61..72afd66 100644
+--- a/src/components/OfferPage.astro
++++ b/src/components/OfferPage.astro
+@@ -8,7 +8,7 @@ import PhotoHero from './PhotoHero.astro';
+ import LeadSplit from './LeadSplit.astro';
+ import TextTile from './TextTile.astro';
+ import SectionTitle from './SectionTitle.astro';
+-import ProjectTiles from './ProjectTiles.astro';
++import ProjectTiles, { type Project } from './ProjectTiles.astro';
+ import StepTile from './StepTile.astro';
+ import CtaBlock from './CtaBlock.astro';
+ import { whyUs, placeholderProjects } from '../data/topics';
+@@ -24,9 +24,27 @@ interface Props {
+   ctaHref: string;
+   statement: string;
+   ctaTitle: string;
++  intro?: string;
++  blocks?: { title: string; text: string }[];
++  projects?: Project[];
+ }
+ 
+-const { title, description, heroHint, titleSize, mobileTitleSize, ctaLabel, ctaHref, statement, ctaTitle } = Astro.props;
++const placeholderBlocks = [1, 2, 3].map((n) => ({ title: `[Abschnitt ${n}]`, text: '[2–3 Sätze]' }));
++
++const {
++  title,
++  description,
++  heroHint,
++  titleSize,
++  mobileTitleSize,
++  ctaLabel,
++  ctaHref,
++  statement,
++  ctaTitle,
++  intro = '[Einleitung: Angebot, für wen, Nutzen]',
++  blocks = placeholderBlocks,
++  projects = placeholderProjects,
++} = Astro.props;
+ ---
+ 
+ <BaseLayout title={title} description={description}>
+@@ -40,16 +58,14 @@ const { title, description, heroHint, titleSize, mobileTitleSize, ctaLabel, ctaH
+     imageHint={heroHint}
+   />
+ 
+-  <LeadSplit statement={statement} intro="[Einleitung: Angebot, für wen, Nutzen]" />
++  <LeadSplit statement={statement} intro={intro} />
+ 
+   <div class="tile-grid">
+-    <TextTile title="[Abschnitt 1]" text="[2–3 Sätze]" />
+-    <TextTile title="[Abschnitt 2]" text="[2–3 Sätze]" />
+-    <TextTile title="[Abschnitt 3]" text="[2–3 Sätze]" />
++    {blocks.map((b) => <TextTile title={b.title} text={b.text} />)}
+   </div>
+ 
+-  <SectionTitle title="[Projekte / Referenzen]" />
+-  <ProjectTiles items={placeholderProjects} label="Projekte und Referenzen" />
++  <SectionTitle title="Projekte und Referenzen" />
++  <ProjectTiles items={projects} label="Projekte und Referenzen" />
+ 
+   <SectionTitle title="Warum Sie bei uns richtig sind" />
+   <div class="tile-grid tile-grid--m2" style="--cols: 4">
+diff --git a/src/components/TopicPage.astro b/src/components/TopicPage.astro
+index 97c24d9..fa1f6b2 100644
+--- a/src/components/TopicPage.astro
++++ b/src/components/TopicPage.astro
+@@ -34,7 +34,7 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
+     imageHint={topic.imageHint}
+   />
+ 
+-  <SectionTitle title="[So läuft es ab]" />
++  <SectionTitle title="So läuft es ab" />
+   <div class="tile-grid">
+     {topic.steps.map((s, i) => <StepTile n={i + 1} title={s.title} text={s.text} />)}
+   </div>
+@@ -53,7 +53,7 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
+       items={siblings.map((s) => ({
+         n: '',
+         title: s.title,
+-        text: '[1 Satz]',
++        text: s.teaser,
+         image: s.image,
+         imageAlt: s.imageAlt,
+         imageHint: s.imageHint,
+diff --git a/src/data/forms.ts b/src/data/forms.ts
+index 544e2db..019a626 100644
+--- a/src/data/forms.ts
++++ b/src/data/forms.ts
+@@ -81,7 +81,7 @@ export const serviceForm: FormDef = {
+     {
+       key: 'boiler',
+       title: 'Ihr Boiler',
+-      hint: '[Hinweis: Angaben stehen auf dem Typenschild]',
++      hint: 'Die Angaben finden Sie auf dem Typenschild des Boilers.',
+       fields: [
+         { name: 'boiler_marke', label: 'Boiler-Marke', type: 'select', options: boilerBrands, span: 2 },
+         { name: 'boiler_typ', label: 'Boiler-Typ', span: 2 },
+diff --git a/src/data/news.ts b/src/data/news.ts
+index 7128986..283a3a3 100644
+--- a/src/data/news.ts
++++ b/src/data/news.ts
+@@ -20,13 +20,22 @@ export interface Job {
+   href?: string;
+ }
+ 
+-export const news: NewsItem[] = [1, 2, 3].map((n) => ({
+-  date: '[Datum]',
+-  title: `[Titel Beitrag ${n}]`,
+-  teaser: '[Anriss]',
+-}));
++export const news: NewsItem[] = [
++  {
++    date: '8. Mai 2026',
++    title: 'Sponsoring Kantonales Schwingfest Mettmenstetten',
++    teaser: 'Wir unterstützen das Kantonale Schwingfest in Mettmenstetten als Sponsor.',
++  },
++  {
++    date: 'Juni 2025',
++    title: 'Prospekt Berger Solar-WP Boiler 600 SWS 3',
++    teaser: 'Neu gibt es einen Prospekt zum Berger Solar-WP Boiler 600 SWS 3.',
++  },
++];
+ 
+-export const jobs: Job[] = [1, 2, 3].map((n) => ({
+-  title: `[Stelle ${n}]`,
+-  meta: '[Pensum · Standort]',
+-}));
++export const jobs: Job[] = [
++  {
++    title: 'Heizungsinstallateur/in EFZ mit Solarerfahrung',
++    meta: '[Pensum · Standort]',
++  },
++];
+diff --git a/src/data/topics.ts b/src/data/topics.ts
+index bac735f..d362d0b 100644
+--- a/src/data/topics.ts
++++ b/src/data/topics.ts
+@@ -39,22 +39,129 @@ const faqs = () => [
+   { q: '[Frage 3]', a: '[Antwort]' },
+ ];
+ 
+-const base = (t: Pick<Topic, 'slug' | 'section' | 'title' | 'imageHint'>): Topic => ({
+-  ...t,
+-  teaser: '[1–2 Sätze zum Thema]',
+-  intro: '[Einleitung: Nutzen in 2 Sätzen]',
+-  steps: steps(),
+-  blocks: blocks(),
+-  faqs: faqs(),
+-});
+-
+ export const topics: Topic[] = [
+-  base({ slug: 'service-und-entkalkung', section: 'boiler', title: 'Service und Entkalkung', imageHint: 'Entkalkung eines Boilers' }),
+-  base({ slug: 'reparatur-und-ersatz', section: 'boiler', title: 'Reparatur und Ersatz', imageHint: 'Montage eines neuen Boilers' }),
+-  base({ slug: 'boiler-ersatzteile', section: 'installateure', title: 'Boiler-Ersatzteile', imageHint: 'Ersatzteil-Regal' }),
+-  base({ slug: 'boiler-verkauf', section: 'installateure', title: 'Boiler-Verkauf', imageHint: 'Neue Boiler im Lager' }),
+-  base({ slug: 'elysator-produkte', section: 'installateure', title: 'Elysator-Produkte', imageHint: 'Elysator-Gerät' }),
+-  base({ slug: 'serviceunterstuetzung', section: 'installateure', title: 'Service\u00ADunterstützung', imageHint: 'Techniker mit Installateur' }),
++  {
++    slug: 'service-und-entkalkung',
++    section: 'boiler',
++    title: 'Service und Entkalkung',
++    imageHint: 'Entkalkung eines Boilers',
++    teaser: 'Regelmässige Wartung und Entkalkung – für hygienisches Warmwasser und einen sparsamen Boiler.',
++    intro:
++      'Mit der Zeit sammeln sich im Boiler Sand, Ablagerungen und Kalk. Ein regelmässiger Service hält das Warmwasser hygienisch, spart Energie und verlängert die Lebensdauer Ihres Boilers.',
++    steps: [
++      { title: 'Offerte anfragen', text: 'Telefonisch unter 044 762 40 00 oder über das Serviceformular – die Offerte erhalten Sie innert weniger Stunden.' },
++      { title: 'Service vor Ort', text: 'Wir entfernen Sand und Ablagerungen im Boilersumpf und entkalken den Boiler.' },
++      { title: 'Schutz und Kontrolle', text: 'Bei jeder Entkalkung schützen wir den Boiler gegen Korrosion und prüfen Temperatur und Ventile.' },
++    ],
++    blocks: [
++      {
++        title: 'Hygienisches Warmwasser',
++        text: 'Ablagerungen im Boilersumpf begünstigen Keime. Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre.',
++      },
++      {
++        title: 'Weniger Energie, mehr Leistung',
++        text: 'Ein entkalkter Boiler heizt effizienter. Das senkt den Energieverbrauch und bringt die volle Leistung zurück.',
++      },
++      {
++        title: 'Längere Lebensdauer',
++        text: 'Regelmässige Pflege beugt Schäden und Ausfällen vor. Den passenden Service-Intervall legen wir individuell mit Ihnen fest.',
++      },
++    ],
++    faqs: [
++      { q: 'Wie oft sollte ein Boiler gewartet werden?', a: 'Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre. Gerne vereinbaren wir mit Ihnen einen individuellen Service-Intervall.' },
++      { q: 'Was ist im Service enthalten?', a: 'Wir entfernen Sand und Ablagerungen im Boilersumpf, entkalken den Boiler und schützen ihn dabei gegen Korrosion.' },
++      { q: 'Wie wird abgerechnet?', a: 'Wir arbeiten mit Netto-Pauschalpreisen. Anfahrt, Kleinmaterial und Dichtungen sind inbegriffen.' },
++    ],
++  },
++  {
++    slug: 'reparatur-und-ersatz',
++    section: 'boiler',
++    title: 'Reparatur und Ersatz',
++    imageHint: 'Montage eines neuen Boilers',
++    teaser: 'Reparieren, wo es sich lohnt – und wenn nötig ein neuer Berger Boiler.',
++    intro:
++      'Wir reparieren Boiler und ersetzen sie, wenn sich eine Reparatur nicht mehr lohnt. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Modelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt.',
++    steps: [
++      { title: 'Kontakt aufnehmen', text: 'Telefonisch unter 044 762 40 00, per E-Mail oder über das Serviceformular.' },
++      { title: 'Beratung', text: 'Wir sagen Ihnen ehrlich, ob sich eine Reparatur lohnt oder ein Ersatz sinnvoller ist.' },
++      { title: 'Ausführung', text: 'Dank Ersatzteilen im Servicefahrzeug meist in einem Arbeitsgang – mit möglichst kurzem Unterbruch beim Warmwasser.' },
++    ],
++    blocks: [
++      {
++        title: 'Reparatur vor Ersatz',
++        text: 'Pflege und Reparatur sind oft günstiger als ein neuer Boiler. Wir prüfen, was sich für Sie lohnt.',
++      },
++      {
++        title: 'Berger Boiler',
++        text: 'Für den Ersatz bieten wir Berger Boiler an, darunter den Solar-WP Boiler 600 SWS 3 und den Kronoterm ESSENTA 303-1 E D PV P3. Katalog und Datenblätter erhalten Sie bei uns.',
++      },
++      {
++        title: 'Transparente Preise',
++        text: 'Wir arbeiten mit Netto-Pauschalpreisen inklusive Anfahrt, Kleinmaterial und Dichtungen.',
++      },
++    ],
++    faqs: [
++      { q: 'Lohnt sich die Reparatur meines Boilers noch?', a: 'Das hängt von Alter und Zustand ab. Wir beraten Sie ehrlich – Reparatur und Pflege sind oft günstiger als ein neuer Boiler.' },
++      { q: 'Wie lange bin ich ohne Warmwasser?', a: 'Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit. Meist erledigen wir die Arbeit in einem Arbeitsgang.' },
++      { q: '[Frage 3]', a: '[Antwort]' },
++    ],
++  },
++  {
++    slug: 'boiler-ersatzteile',
++    section: 'installateure',
++    title: 'Boiler-Ersatzteile',
++    imageHint: 'Ersatzteil-Regal',
++    teaser: 'Ersatzteile für alle Boiler – und Sonderanfertigungen auf Anfrage.',
++    intro: 'Wir führen Ersatzteile für alle Boiler und fertigen auf Anfrage auch Sonderanfertigungen. Unser Team berät Sie gerne.',
++    steps: [
++      { title: 'Anfrage senden', text: 'Über das Ersatzteil-Formular, per E-Mail oder telefonisch unter 044 762 40 00.' },
++      { title: '[Schritt]', text: '[1 Satz]' },
++      { title: '[Schritt]', text: '[1 Satz]' },
++    ],
++    blocks: [
++      { title: 'Für alle Boiler', text: 'Wir führen Ersatzteile für alle Boiler.' },
++      { title: 'Sonderanfertigungen', text: 'Ist ein Teil nicht ab Lager erhältlich, fragen wir eine Sonderanfertigung für Sie an.' },
++      { title: '[Abschnitt 3]', text: '[2–3 Sätze]' },
++    ],
++    faqs: faqs(),
++  },
++  {
++    slug: 'boiler-verkauf',
++    section: 'installateure',
++    title: 'Boiler-Verkauf',
++    imageHint: 'Neue Boiler im Lager',
++    teaser: 'Berger Boiler – Katalog und Datenblätter für Installateure.',
++    intro: 'Wir verkaufen Berger Boiler an Installateure. Katalog und Datenblätter stellen wir Ihnen gerne zur Verfügung.',
++    steps: steps(),
++    blocks: [
++      { title: 'Berger Boiler 600 SWS 3', text: 'Der Solar-WP Boiler 600 SWS 3 ist ein sicherer Energiespeicher für Solar und Wärmepumpe.' },
++      { title: 'Kronoterm ESSENTA 303-1 E D PV P3', text: 'Als weiteres Modell führen wir den Kronoterm ESSENTA 303-1 E D PV P3.' },
++      { title: 'Katalog 2026', text: 'Den Berger Katalog mit Preisen ab 1. September 2026 erhalten Sie bei uns.' },
++    ],
++    faqs: faqs(),
++  },
++  {
++    slug: 'elysator-produkte',
++    section: 'installateure',
++    title: 'Elysator-Produkte',
++    imageHint: 'Elysator-Gerät',
++    teaser: 'Elysator-Produkte ab Lager – mit technischem Kundendienst aus Obfelden und Bubikon.',
++    intro: 'Als Elysator technischer Kundendienst haben wir verschiedene Elysator-Produkte am Lager und betreuen sie im Service.',
++    steps: steps(),
++    blocks: blocks(),
++    faqs: faqs(),
++  },
++  {
++    slug: 'serviceunterstuetzung',
++    section: 'installateure',
++    title: 'Service\u00ADunterstützung',
++    imageHint: 'Techniker mit Installateur',
++    teaser: '[1–2 Sätze zum Thema]',
++    intro: '[Einleitung: Nutzen in 2 Sätzen]',
++    steps: steps(),
++    blocks: blocks(),
++    faqs: faqs(),
++  },
+ ];
+ 
+ export const sections = {
+@@ -80,10 +187,10 @@ export const topicsOf = (section: Topic['section']) => topics.filter((t) => t.se
+ 
+ /** «Warum Sie bei uns richtig sind» (Solar, Korrosions- und Kalkschutz) */
+ export const whyUs = [
+-  { title: 'Kompetente Beratung', text: '[1–2 Sätze]' },
+-  { title: 'Effiziente Ausführung', text: '[1–2 Sätze]' },
+-  { title: 'Transparenter Preis', text: '[1–2 Sätze]' },
+-  { title: 'Umfassender Service', text: '[1–2 Sätze]' },
++  { title: 'Kompetente Beratung', text: 'Seit 1992 auf Warmwasser spezialisiert: Boiler, Solar sowie Korrosions- und Kalkschutz.' },
++  { title: 'Effiziente Ausführung', text: 'Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit.' },
++  { title: 'Transparenter Preis', text: 'Netto-Pauschalpreise inklusive Anfahrt, Kleinmaterial und Dichtungen.' },
++  { title: 'Umfassender Service', text: 'Möglichst kurze Unterbrüche beim Warmwasser und ein Service-Intervall, der zu Ihrer Anlage passt.' },
+ ];
+ 
+ export const placeholderProjects = [1, 2, 3, 4].map((n) => ({ title: `[Projekt ${n}]`, meta: '[Ort · Jahr]' }));
+diff --git a/src/pages/aktuelles.astro b/src/pages/aktuelles.astro
+index 30fbd61..9243564 100644
+--- a/src/pages/aktuelles.astro
++++ b/src/pages/aktuelles.astro
+@@ -81,9 +81,9 @@ const applyHref = `mailto:${company.email}?subject=${encodeURIComponent('Bewerbu
+ 
+       <ActionTile
+         size="md"
+-        title="[Nichts Passendes dabei?]"
++        title="Nichts Passendes dabei?"
+         text="[Spontanbewerbung / Lehrstellen]"
+-        ctaLabel="[Bewerben]"
++        ctaLabel="Bewerben"
+         ctaHref={applyHref}
+       />
+     </div>
+diff --git a/src/pages/boiler/index.astro b/src/pages/boiler/index.astro
+index b660c3f..24b5969 100644
+--- a/src/pages/boiler/index.astro
++++ b/src/pages/boiler/index.astro
+@@ -19,7 +19,7 @@ const items = topicsOf('boiler').map((t) => ({
+ 
+ <BaseLayout title="Boiler" description="Service, Entkalkung, Reparatur und Ersatz von Boilern – Berger Boiler-Service AG, Ihr Warmwasserspezialist seit 1992.">
+   <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Boiler' }]} title="Boiler">
+-    <p><Copy text="[Einleitung: 2–3 Sätze zum Bereich Boiler]" /></p>
++    <p><Copy text="Wir warten, entkalken, reparieren und ersetzen Boiler. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt, mit möglichst kurzem Unterbruch beim Warmwasser." /></p>
+   </PageIntro>
+ 
+   <div class="pad-tiles">
+diff --git a/src/pages/impressum.astro b/src/pages/impressum.astro
+index 4f5f19b..20cf1b2 100644
+--- a/src/pages/impressum.astro
++++ b/src/pages/impressum.astro
+@@ -25,10 +25,10 @@ import { company } from '../data/site';
+   }
+ 
+   <h2>Handelsregister</h2>
+-  <p><Copy text="[UID / Handelsregister-Nummer]" /></p>
++  <p>UID: CHE-475.826.380</p>
+ 
+-  <h2>Vertretungsberechtigte Personen</h2>
+-  <p><Copy text="[Namen]" /></p>
++  <h2>Verantwortliche Person</h2>
++  <p>Lukas Berger</p>
+ 
+   <h2>Haftungsausschluss und Urheberrechte</h2>
+   <p><Copy text="[Text Haftungsausschluss / Urheberrechte – vom Kunden bzw. Rechtsberatung]" /></p>
+diff --git a/src/pages/index.astro b/src/pages/index.astro
+index 94f38a1..7a4ae3b 100644
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -12,7 +12,7 @@ import { company, routes } from '../data/site';
+ const worlds: ColumnItem[] = [
+   {
+     title: 'Boiler',
+-    text: '[1 Satz: was wir hier tun]',
++    text: 'Service, Entkalkung, Reparatur und Ersatz – meist in einem Arbeitsgang erledigt.',
+     imageHint: 'Servicetechniker am geöffneten Boiler im Keller',
+     links: [
+       { label: 'Service und Entkalkung', href: routes.boilerService },
+@@ -21,19 +21,19 @@ const worlds: ColumnItem[] = [
+   },
+   {
+     title: 'Solar',
+-    text: '[1 Satz: was wir hier tun]',
++    text: 'Solaranlagen für Warmwasser und eigenen Strom – seit über 30 Jahren.',
+     imageHint: 'Solarkollektoren auf einem Hausdach',
+     cta: { label: 'Mehr erfahren', href: routes.solar },
+   },
+   {
+     title: 'Korrosions- und Kalkschutz',
+-    text: '[1 Satz: was wir hier tun]',
++    text: 'Schutz für Boiler und Leitungen vor Kalk und Korrosion – als Elysator Servicestelle.',
+     imageHint: 'Schutzanlage an einer Wasserleitung',
+     cta: { label: 'Mehr erfahren', href: routes.corrosion },
+   },
+   {
+     title: 'Für Installateure',
+-    text: '[1 Satz: was wir hier tun]',
++    text: 'Ersatzteile für alle Boiler, Berger Boiler, Elysator-Produkte und Unterstützung im Service.',
+     imageHint: 'Ersatzteil-Regal im Servicefahrzeug',
+     links: [
+       { label: 'Boiler-Ersatzteile', href: routes.installersParts },
+diff --git a/src/pages/installateure/index.astro b/src/pages/installateure/index.astro
+index 14ab7f1..4c40235 100644
+--- a/src/pages/installateure/index.astro
++++ b/src/pages/installateure/index.astro
+@@ -20,7 +20,7 @@ const items = topicsOf('installateure').map((t) => ({
+ 
+ <BaseLayout title="Für Installateure" description="Boiler-Ersatzteile, Boiler-Verkauf, Elysator-Produkte und Serviceunterstützung für Installateure – Berger Boiler-Service AG.">
+   <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Für Installateure' }]} title="Für Installateure" scale="xl-long">
+-    <p><Copy text="[Einleitung: für wen und was angeboten wird]" /></p>
++    <p><Copy text="Für Installateure führen wir Ersatzteile für alle Boiler, verkaufen Berger Boiler und haben Elysator-Produkte am Lager. Service und Qualität seit 1992." /></p>
+   </PageIntro>
+ 
+   <div class="pad-tiles">
+@@ -30,7 +30,7 @@ const items = topicsOf('installateure').map((t) => ({
+   <div class="actions">
+     <ActionTile
+       title="Ersatzteil anfragen"
+-      text="[1 Satz: Angaben zu Boiler und Artikel, wir melden uns]"
++      text="Senden Sie uns die Angaben zu Boiler und Artikel – wir melden uns bei Ihnen."
+       ctaLabel="Zum Ersatzteil-Formular"
+       ctaHref={routes.formParts}
+     />
+diff --git a/src/pages/korrosions-und-kalkschutz.astro b/src/pages/korrosions-und-kalkschutz.astro
+index d1b5803..de6c2cc 100644
+--- a/src/pages/korrosions-und-kalkschutz.astro
++++ b/src/pages/korrosions-und-kalkschutz.astro
+@@ -6,12 +6,27 @@ import { routes } from '../data/site';
+ 
+ <OfferPage
+   title="Korrosions- und Kalkschutz"
+-  description="Korrosions- und Kalkschutz für Heizung und Warmwasser – Elysator Servicestelle Berger Boiler-Service AG."
++  description="Korrosions- und Kalkschutz für Boiler und Wasserleitungen – Elysator Servicestelle Berger Boiler-Service AG."
+   heroHint="Schutzanlage an Wasserleitung"
+   titleSize={84}
+   mobileTitleSize={42}
+   ctaLabel="Service anfragen"
+   ctaHref={routes.formService}
+-  statement="[Kernaussage zu Korrosions- und Kalkschutz]"
+-  ctaTitle="[Fragen zu Kalk oder Korrosion?]"
++  statement="Wir betrachten nicht nur den Boiler, sondern das ganze Wasserverteilsystem."
++  intro="Quell-, Grund- und Seewasser enthält oft viel Sauerstoff und Kohlensäure. Das führt in Boilern zunehmend zu Korrosion. Wir beraten Sie umfassend zu Kalk- und Korrosionsschutz."
++  blocks={[
++    {
++      title: 'Erste Anzeichen erkennen',
++      text: 'Hartnäckige Kalkablagerungen im Haushalt oder gelegentlich rotes Wasser aus dem Hahn deuten auf Kalk- oder Korrosionsprobleme hin. Bei emaillierten Boilern entstehen zudem feine Haarrisse, die korrodieren können.',
++    },
++    {
++      title: 'Magnesium-Schutzanode',
++      text: 'Die Anode im Behälter zieht die korrosive Wirkung des Wassers auf sich und wird dabei langsam verbraucht – der Boiler bleibt geschützt. Geeignet für emaillierte, plastifizierte, zementierte, Chromstahl- und schwarze Stahlboiler.',
++    },
++    {
++      title: 'Elysator Servicestelle',
++      text: 'Als technischer Kundendienst für Elysator verkaufen und betreuen wir Elysator-Anlagen – in Obfelden und Bubikon.',
++    },
++  ]}
++  ctaTitle="Fragen zu Kalk oder Korrosion?"
+ />
+diff --git a/src/pages/solar.astro b/src/pages/solar.astro
+index f72f21d..999de21 100644
+--- a/src/pages/solar.astro
++++ b/src/pages/solar.astro
+@@ -6,12 +6,27 @@ import { routes } from '../data/site';
+ 
+ <OfferPage
+   title="Solar"
+-  description="Solaranlagen für Warmwasser – Beratung, Ausführung und Service von Berger Boiler-Service AG."
++  description="Solaranlagen für Warmwasser und eigenen Strom – Beratung und Ausführung von Berger Boiler-Service AG, seit über 30 Jahren."
+   heroHint="Solaranlage auf Hausdach"
+   titleSize={120}
+   mobileTitleSize={72}
+   ctaLabel="Solar anfragen"
+   ctaHref={routes.formSolar}
+-  statement="[Kernaussage zu Solar]"
+-  ctaTitle="[Interesse an Solar?]"
++  statement="Seit über 30 Jahren bauen wir Solaranlagen."
++  intro="Wir beraten Sie zu Solaranlagen für Warmwasser und zur Produktion von eigenem Strom. Unser Bereich Erneuerbare Energien mit eigenen Solarmitarbeitenden setzt Ihre Anlage um."
++  blocks={[
++    { title: '[Abschnitt 1]', text: '[2–3 Sätze]' },
++    { title: '[Abschnitt 2]', text: '[2–3 Sätze]' },
++    {
++      title: 'Wir bilden aus',
++      text: 'Unter der Leitung von Silvan Lier, Leiter Erneuerbare Energien und Berufsbildner, bilden wir Solarinstallateurinnen und Solarinstallateure EFZ aus.',
++    },
++  ]}
++  projects={[
++    { title: 'Die Volldachlösung im Brüttental', meta: 'Wärme und Strom' },
++    { title: '[Projekt 2]', meta: '[Ort · Jahr]' },
++    { title: '[Projekt 3]', meta: '[Ort · Jahr]' },
++    { title: '[Projekt 4]', meta: '[Ort · Jahr]' },
++  ]}
++  ctaTitle="Interesse an Solar?"
+ />
+diff --git a/src/pages/ueber-uns.astro b/src/pages/ueber-uns.astro
+index bdaf8dd..c266633 100644
+--- a/src/pages/ueber-uns.astro
++++ b/src/pages/ueber-uns.astro
+@@ -10,12 +10,39 @@ import Copy from '../components/Copy.astro';
+ import { routes } from '../data/site';
+ 
+ /** Team: Einträge ergänzen, sobald Namen/Funktionen/Porträts vorliegen. */
+-const team: { name: string; role: string }[] = Array.from({ length: 8 }, () => ({ name: '[Name]', role: '[Funktion]' }));
++const team: { name: string; role: string }[] = [
++  { name: 'Lukas Berger', role: 'Geschäftsleitung, Servicetechniker / VR' },
++  { name: 'Helen Berger', role: 'Geschäftsleitung, Administration / VR' },
++  { name: 'Davide Luongo', role: 'Geschäftsleitung, Serviceleiter' },
++  { name: 'Judith Künzli', role: 'Administration' },
++  { name: 'Patrick Graf', role: 'Administration' },
++  { name: 'Patrick Rüttimann', role: 'Administration' },
++  { name: 'Chrigel Egli', role: 'Administration' },
++  { name: 'Olivia Thalparpan', role: 'Administration Teilzeit' },
++  { name: 'Kevin Calzada', role: 'Administration Solar' },
++  { name: 'Sara Berger', role: 'Administration Teilzeit' },
++  { name: 'Lukas Gabriel', role: 'Betriebsmitarbeiter' },
++  { name: 'Christoph Zehnder', role: 'Solarmitarbeiter / Servicetechniker' },
++  { name: 'Silvan Lier', role: 'Leiter Erneuerbare Energien / Berufsbildner' },
++  { name: 'Fabio Brignoli', role: 'Servicetechniker' },
++  { name: 'Paolo Appella', role: 'Servicetechniker' },
++  { name: 'Giuseppe Luongo', role: 'Servicetechniker' },
++  { name: 'Lüc Kurmann', role: 'Servicetechniker' },
++  { name: 'Kevin Carpintero', role: 'Servicetechniker' },
++  { name: 'Roberto Ramorino', role: 'Servicetechniker' },
++  { name: 'Hugo Carpintero', role: 'Servicetechniker, Standort Bubikon' },
++  { name: 'Luca Di Giacomo', role: 'Solarmitarbeiter / Servicetechniker' },
++  { name: 'Stefan Frutiger', role: 'Solarmitarbeiter / Servicemonteur' },
++  { name: 'Daniel Rüttimann', role: 'Solarmitarbeiter / Servicemonteur' },
++  { name: 'Nao Knill', role: 'Solarinstallateur EFZ in Ausbildung' },
++  { name: 'Cyril Hess', role: 'Solarinstallateur EFZ in Ausbildung' },
++  { name: 'Nils Berger', role: '[Funktion]' },
++];
+ ---
+ 
+ <BaseLayout title="Über uns" description="Berger Boiler-Service AG – Ihr Warmwasserspezialist seit 1992, Elysator Servicestelle mit Standorten in Obfelden und Bubikon." compactFooter>
+   <PageIntro crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Über uns' }]} title="Über uns" layout="stacked">
+-    <p class="lead"><Copy text="[1–2 Sätze: wer wir sind]" /></p>
++    <p class="lead"><Copy text="Wir sind ein kleiner, familiärer Betrieb aus Obfelden und seit über 30 Jahren auf Warmwasser spezialisiert: Boiler, Solar sowie Korrosions- und Kalkschutz." /></p>
+   </PageIntro>
+ 
+   <div class="team-photo">
+@@ -23,8 +50,16 @@ const team: { name: string; role: string }[] = Array.from({ length: 8 }, () => (
+   </div>
+ 
+   <div class="tile-grid" style="--cols: 2; padding-top: var(--gap-tiles)">
+-    <TextTile size="lg" title="Geschichte" text="[Text]" />
+-    <TextTile size="lg" title="Werte und Arbeitsweise" text="[Text]" />
++    <TextTile
++      size="lg"
++      title="Geschichte"
++      text="Seit 1992 kümmern wir uns um Boiler, Solaranlagen sowie Korrosions- und Kalkschutz. Heute arbeiten wir vom Hauptsitz in Obfelden und von der Filiale Ost in Bubikon aus, sind technischer Kundendienst für Elysator und bilden Solarinstallateurinnen und Solarinstallateure EFZ aus."
++    />
++    <TextTile
++      size="lg"
++      title="Werte und Arbeitsweise"
++      text="Wir halten Unterbrüche beim Warmwasser so kurz wie möglich, reparieren und pflegen statt vorschnell zu ersetzen und prüfen Temperatur, Ventile und Korrosionsschutz. Wir arbeiten mit Netto-Pauschalpreisen inklusive Anfahrt, Kleinmaterial und Dichtungen und setzen auf Solarenergie."
++    />
+   </div>
+ 
+   <SectionTitle title="Team" />
+-- 
+2.43.0
+
