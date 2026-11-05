@@ -4,6 +4,7 @@
  */
 import type { ImageMetadata } from 'astro';
 import volldach from '../assets/fotos/referenz-volldach.jpg';
+import projekt2 from '../assets/fotos/referenz-projekt-2.jpg';
 
 export const solarIntro = {
   statement: 'Seit über 30 Jahren nutzen wir Solarenergie.',
@@ -95,17 +96,28 @@ const openFacts = [
 export const references: Reference[] = [
   {
     title: 'Volldachlösung in Rüedisbach',
-    text: 'Warmwasser, Strom und Batteriespeicher: Die PV-Anlage auf dem ganzen Dach versorgt die Kühlanlagen des Lebensmittelladens. Deren Abwärme heizt über Wärmetauscher das Wasser für Heizung und Warmwasser der Wohnungen.',
+    text: 'Warmwasser, Strom und Batteriespeicher',
     image: volldach,
     imageAlt: 'Solaranlage über die ganze Dachfläche eines Holzbaus',
     facts: [
       { label: 'PV-Leistung', value: '35,8 kWp' },
       { label: 'Wasserspeicher', value: '1800 Liter' },
       { label: 'Batteriespeicher', value: '15,0 kWh' },
-      { label: 'Kollektorfläche', value: '30 m²' },
+      { label: 'Kollektorfläche', value: '15 m²' },
     ],
   },
-  ...[2, 3, 4].map((n) => ({
+  {
+    title: '[Projekt 2]',
+    text: '[Kurze Beschreibung: Gebäude, Anlage, Besonderheit]',
+    image: projekt2,
+    imageAlt: 'Hausfassade mit Solardach',
+    facts: [
+      { label: 'PV-Leistung', value: '4,8 kWp' },
+      { label: 'Kollektorfläche', value: '5 m²' },
+      { label: 'Warmwasser', value: '600 Liter' },
+    ],
+  },
+  ...[3, 4].map((n) => ({
     title: `[Projekt ${n}]`,
     text: '[Kurze Beschreibung: Gebäude, Anlage, Besonderheit]',
     facts: openFacts,
