@@ -1,32 +1,646 @@
 ---
-/** 6c Solar */
-import OfferPage from '../components/OfferPage.astro';
+/**
+ * 6c Solar – Inhalte aus src/data/solar.ts.
+ * Aufbau: Foto + Titel · Einleitung · 3 Textkacheln · Vergleich Solarthermie/PV (Diagramme,
+ * Stärken/Grenzen, Beispiel) · Referenzen (Hover verbreitert) · FAQ · Warum wir · CTA.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import TextTile from '../components/TextTile.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import StepTile from '../components/StepTile.astro';
+import Faq from '../components/Faq.astro';
+import CtaBlock from '../components/CtaBlock.astro';
+import Photo from '../components/Photo.astro';
+import Copy from '../components/Copy.astro';
 import { routes } from '../data/site';
+import heroImage from '../assets/fotos/solar-hero.jpg';
+import {
+  solarIntro,
+  solarBlocks,
+  chartMax,
+  chartYield,
+  chartHeat,
+  compare,
+  sources,
+  references,
+  solarFaqs,
+  solarWhyUs,
+} from '../data/solar';
+
+const pct = (v: number) => `${((v / chartMax) * 100).toFixed(1)}%`;
 ---
 
-<OfferPage
+<BaseLayout
   title="Solar"
-  description="Solaranlagen für Warmwasser und eigenen Strom – Beratung und Ausführung von Berger Boiler-Service AG, seit über 30 Jahren."
-  heroHint="Solaranlage auf Hausdach"
-  titleSize={120}
-  mobileTitleSize={72}
-  ctaLabel="Solar anfragen"
+  description="Solarthermie und Photovoltaik aus einer Hand: Beratung, Planung, Installation und Service von Berger Boiler-Service AG – seit über 30 Jahren."
   ctaHref={routes.formSolar}
-  statement="Seit über 30 Jahren bauen wir Solaranlagen."
-  intro="Wir beraten Sie zu Solaranlagen für Warmwasser und zur Produktion von eigenem Strom. Unser Bereich Erneuerbare Energien mit eigenen Solarmitarbeitenden setzt Ihre Anlage um."
-  blocks={[
-    { title: '[Abschnitt 1]', text: '[2–3 Sätze]' },
-    { title: '[Abschnitt 2]', text: '[2–3 Sätze]' },
+  ctaLabel="Solar anfragen"
+>
+  <PhotoHero
+    crumbs={[{ label: 'Startseite', href: routes.home }, { label: 'Solar' }]}
+    title="Solar"
+    ctaLabel="Solar anfragen"
+    ctaHref={routes.formSolar}
+    titleSize={120}
+    mobileTitleSize={72}
+    image={heroImage}
+    imageAlt="Solaranlage auf einem Hausdach"
+  />
+
+  <section class="intro">
+    <h2 class="intro__statement">{solarIntro.statement}</h2>
+    <div class="intro__text">
+      {solarIntro.paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+
+  <div class="tile-grid">
+    {solarBlocks.map((b) => <TextTile title={b.title} text={b.text} />)}
+  </div>
+
+  <!-- Vergleich Solarthermie / Photovoltaik -->
+  <section class="cmp-head">
+    <h2>Solarwärme oder Solarstrom? Am besten beides.</h2>
+    <p>
+      Solarthermie macht aus Sonnenlicht warmes Wasser, Photovoltaik (PV) macht Strom. Beide nutzen dieselbe Dachfläche, aber auf ganz
+      unterschiedliche Weise. Wer die Stärken beider Systeme kennt, holt aus jedem Quadratmeter Dach am meisten heraus.
+    </p>
+  </section>
+
+  <div class="charts">
+    <figure class="chart">
+      <figcaption>
+        <span class="chart__title">Energie pro m² Dachfläche und Jahr</span>
+        <span class="chart__sub">Richtwerte für die Schweiz, in kWh</span>
+      </figcaption>
+      <div class="chart__rows">
+        {
+          chartYield.map((r) => (
+            <div class="bar">
+              <div class="bar__label">
+                <span>{r.label}</span>
+                <strong>{r.display}</strong>
+              </div>
+              <div class="bar__track" role="img" aria-label={`${r.label}: ${r.display} kWh, ${r.note}`}>
+                <div class:list={['bar__fill', `bar__fill--${r.tone}`]} style={`width:${pct(r.value)}`} />
+                <div class="bar__range" style={`left:${pct(r.range[0])};width:${pct(r.range[1] - r.range[0])}`} />
+              </div>
+              <span class="bar__note">{r.note}</span>
+            </div>
+          ))
+        }
+      </div>
+      <p class="chart__text">Pro Quadratmeter liefert ein Sonnenkollektor zwei- bis dreimal mehr Energie als ein PV-Modul – allerdings als Wärme, nicht als Strom.</p>
+    </figure>
+
+    <figure class="chart">
+      <figcaption>
+        <span class="chart__title">Und wenn man alles in Wärme rechnet?</span>
+        <span class="chart__sub">Wärme pro m² und Jahr, in kWh</span>
+      </figcaption>
+      <div class="chart__rows">
+        {
+          chartHeat.map((r) => (
+            <div class="bar">
+              <div class="bar__label">
+                <span>{r.label}</span>
+                <strong>{r.display}</strong>
+              </div>
+              <div class="bar__track" role="img" aria-label={`${r.label}: ${r.display} kWh`}>
+                <div class:list={['bar__fill', `bar__fill--${r.tone}`]} style={`width:${pct(r.value)}`} />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <p class="chart__text">
+        Eine Wärmepumpe macht aus 1 kWh Strom rund 3 kWh Wärme (angenommene Jahresarbeitszahl 3). Mit einem Heizstab wird aus 1 kWh Strom nur 1 kWh
+        Wärme. Entscheidend ist also, wie der Strom genutzt wird.
+      </p>
+    </figure>
+  </div>
+
+  <div class="pros">
     {
-      title: 'Wir bilden aus',
-      text: 'Unter der Leitung von Silvan Lier, Leiter Erneuerbare Energien und Berufsbildner, bilden wir Solarinstallateurinnen und Solarinstallateure EFZ aus.',
-    },
-  ]}
-  projects={[
-    { title: 'Die Volldachlösung im Brüttental', meta: 'Wärme und Strom' },
-    { title: '[Projekt 2]', meta: '[Ort · Jahr]' },
-    { title: '[Projekt 3]', meta: '[Ort · Jahr]' },
-    { title: '[Projekt 4]', meta: '[Ort · Jahr]' },
-  ]}
-  ctaTitle="Interesse an Solar?"
-/>
+      [compare.thermal, compare.pv].map((c) => (
+        <div class="pros__card">
+          <h3>{c.title}</h3>
+          <div class="pros__group">
+            <span class="pros__label">Stärken</span>
+            <ul>
+              {c.pros.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="pros__group pros__group--muted">
+            <span class="pros__label">Grenzen</span>
+            <ul>
+              {c.cons.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))
+    }
+    <div class="pros__card pros__card--violet">
+      <h3>{compare.combined.title}</h3>
+      <ul>
+        {compare.combined.points.map((p) => <li>{p}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <figure class="roof">
+    <figcaption>
+      <span class="roof__title">Beispiel: 40 m² Dach eines Einfamilienhauses</span>
+      <span class="chart__sub">Beispielrechnung mit den Richtwerten oben – jede Anlage planen wir individuell</span>
+    </figcaption>
+    <div class="roof__bar" role="img" aria-label="Aufteilung: 5 m² Solarthermie und 35 m² Photovoltaik">
+      <div class="roof__st"><span>5 m² Solarthermie</span></div>
+      <div class="roof__pv"><span>35 m² Photovoltaik (rund 5,8 kWp)</span></div>
+    </div>
+    <div class="roof__facts">
+      <div>
+        <span class="roof__k">Wärme aus 5 m² Kollektor</span>
+        <span class="roof__v">ca. 2250 kWh</span>
+        <span class="roof__k">deckt einen grossen Teil des Warmwassers</span>
+      </div>
+      <div>
+        <span class="roof__k">Strom aus 35 m² PV</span>
+        <span class="roof__v">ca. 5000–6400 kWh</span>
+        <span class="roof__k">für Haushalt, Wärmepumpe oder E-Auto</span>
+      </div>
+    </div>
+  </figure>
+  <p class="sources">{sources}</p>
+
+  <SectionTitle title="Projekte und Referenzen" />
+  <ul class="refs" aria-label="Projekte und Referenzen">
+    {
+      references.map((r) => (
+        <li class="ref" tabindex="0">
+          <div class="ref__img">
+            <Photo image={r.image} alt={r.imageAlt} sizes="(min-width: 900px) 40vw, 100vw" widths={[480, 800, 1200]} />
+          </div>
+          <div class="ref__body">
+            <h3>
+              <Copy text={r.title} />
+            </h3>
+            <p>
+              <Copy text={r.text} />
+            </p>
+            <dl>
+              {r.facts.map((f) => (
+                <div>
+                  <dt>{f.label}</dt>
+                  <dd>
+                    <Copy text={f.value} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <Faq title="Häufige Fragen zu Solar" items={solarFaqs} />
+
+  <SectionTitle title="Warum Sie bei uns richtig sind" />
+  <div class="tile-grid tile-grid--m2" style="--cols: 4">
+    {solarWhyUs.map((w, i) => <StepTile tone="soft" n={i + 1} title={w.title} text={w.text} />)}
+  </div>
+
+  <CtaBlock title="Interesse an Solar?" ctaLabel="Solar anfragen" ctaHref={routes.formSolar} />
+</BaseLayout>
+
+<style>
+  .intro {
+    padding: 72px var(--gutter-text) 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .intro__statement {
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .intro__text {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  /* Vergleich */
+  .cmp-head {
+    padding: 96px var(--gutter-text) 24px;
+    max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .cmp-head h2 {
+    font-size: 56px;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .cmp-head p {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+  }
+
+  .charts,
+  .pros {
+    padding: 0 var(--gutter-tiles);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-tiles);
+    margin-bottom: var(--gap-tiles);
+  }
+
+  .pros {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .chart {
+    margin: 0;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--r-tile);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .chart__title {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .chart__sub {
+    font-size: 15px;
+    color: var(--c-text-muted);
+  }
+
+  .chart__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .bar__label {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .bar__track {
+    position: relative;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--c-surface-tint);
+  }
+
+  .bar__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 8px;
+  }
+
+  .bar__fill--primary {
+    background: var(--c-primary);
+  }
+
+  .bar__fill--light {
+    background: #b9a6dd;
+  }
+
+  .bar__fill--pale {
+    background: var(--c-on-dark-muted);
+  }
+
+  .bar__range {
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: var(--c-ink);
+    opacity: 0.45;
+  }
+
+  .bar__note {
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .chart__text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .pros__card {
+    background: var(--c-surface-tint);
+    border-radius: var(--r-tile);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .pros__card h3 {
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  .pros__card ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .pros__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pros__label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--c-primary-dark-text);
+  }
+
+  .pros__group--muted .pros__label,
+  .pros__group--muted ul {
+    color: var(--c-text-muted);
+  }
+
+  .pros__card--violet {
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .pros__card--violet h3 {
+    color: #fff;
+  }
+
+  .pros__card--violet ul {
+    color: var(--c-on-dark-soft);
+  }
+
+  .roof {
+    margin: 0 var(--gutter-tiles);
+    background: var(--c-surface-tint);
+    border-radius: var(--r-tile);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .roof__title {
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  .roof__bar {
+    display: flex;
+    height: 120px;
+    border-radius: 14px;
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .roof__bar > div {
+    padding: 16px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .roof__st {
+    flex: 5 1 0;
+    min-width: 120px;
+    background: var(--c-primary);
+    color: #fff;
+  }
+
+  .roof__pv {
+    flex: 35 1 0;
+    background: repeating-linear-gradient(90deg, #b9a6dd 0 46px, #ab96d3 46px 48px);
+  }
+
+  .roof__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-tiles);
+  }
+
+  .roof__facts > div {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .roof__k {
+    font-size: 15px;
+    color: var(--c-text-muted);
+  }
+
+  .roof__v {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .sources {
+    margin: 10px var(--gutter-text) 0;
+    max-width: 1100px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  /* Referenzen: Hover/Fokus verbreitert die Kachel (Desktop) */
+  .refs {
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--gutter-tiles);
+    display: flex;
+    gap: var(--gap-tiles);
+  }
+
+  .ref {
+    flex: 1 1 0;
+    min-width: 0;
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition:
+      flex-grow var(--dur-expand) var(--ease-expand),
+      box-shadow 0.3s;
+  }
+
+  .ref:hover,
+  .ref:focus-within {
+    flex-grow: 1.8;
+    box-shadow: 0 10px 28px rgba(30, 26, 38, 0.14);
+  }
+
+  .ref__img {
+    position: relative;
+    height: 280px;
+  }
+
+  .ref__body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ref__body h3 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .ref__body p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--c-text-muted);
+  }
+
+  .ref dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  .ref dl > div {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ref dt {
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .ref dd {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ref {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 899.98px) {
+    .intro,
+    .charts,
+    .pros,
+    .roof__facts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .intro {
+      padding: 40px var(--gutter-text) 32px;
+      gap: 20px;
+    }
+
+    .intro__statement {
+      font-size: 30px;
+    }
+
+    .intro__text,
+    .cmp-head p {
+      font-size: 17px;
+    }
+
+    .cmp-head {
+      padding-top: 56px;
+    }
+
+    .cmp-head h2 {
+      font-size: 34px;
+    }
+
+    .chart,
+    .pros__card {
+      padding: 24px;
+    }
+
+    .roof {
+      padding: 24px;
+    }
+
+    .roof__bar {
+      height: 96px;
+      font-size: 13px;
+    }
+
+    .roof__st {
+      min-width: 96px;
+    }
+
+    .roof__v {
+      font-size: 24px;
+    }
+
+    .refs {
+      flex-direction: column;
+    }
+
+    .ref:hover,
+    .ref:focus-within {
+      flex-grow: 1;
+    }
+
+    .ref__img {
+      height: 220px;
+    }
+  }
+</style>
