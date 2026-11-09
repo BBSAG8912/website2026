@@ -42,7 +42,6 @@ export const chartYield = [
 
 export const chartHeat = [
   { label: 'Solarthermie, direkt in den Boiler', value: 450, display: 'ca. 450', tone: 'primary' },
-  { label: 'PV-Strom mit Wärmepumpe', value: 495, display: 'ca. 500', tone: 'light' },
   { label: 'PV-Strom mit Heizstab', value: 165, display: 'ca. 165', tone: 'pale' },
 ] as const;
 
@@ -62,7 +61,6 @@ export const compare = {
     pros: [
       'Strom ist vielseitig: Haushalt, Wärmepumpe, E-Auto',
       'Überschuss geht in den Batteriespeicher oder ins Netz',
-      'Mit Wärmepumpe auch für Wärme sehr effizient',
     ],
     cons: ['Weniger Energie pro m² als Solarthermie', 'Um Wärme zu erzeugen, wird viel mehr Fläche benötigt'],
   },
@@ -71,7 +69,7 @@ export const compare = {
     points: [
       'Ein kleiner Kollektor deckt das Warmwasser – der PV-Strom bleibt frei für Haushalt, Wärmepumpe und die Mobilität.',
       'Die Dachfläche wird so eingesetzt, wie Sie und Ihr Gebäude es benötigen.',
-      'Ein Kombispeicher wie der Berger Solar-WP Boiler 600 SWS 3 nimmt Wärme von Sonne und Wärmepumpe auf.',
+      'Ein Energiespeicher wie der Berger Solar-WP Boiler 600 SWS 3 nimmt Wärme von Sonne und Wärmepumpe auf und ist ein besonders sicherer Energiespeicher.',
       'Wir planen Boiler, Kollektoren, Wärmepumpe und PV als ein System – aus einer Hand.',
     ],
   },
@@ -143,7 +141,7 @@ export const solarFaqs = [
   },
   {
     q: 'Was bringt mehr pro Quadratmeter Dach?',
-    a: 'Ein Sonnenkollektor liefert pro m² rund zwei- bis dreimal mehr Energie als ein PV-Modul – aber als Wärme. Strom ist dafür vielseitiger einsetzbar. Mit einer Wärmepumpe wird auch aus PV-Strom sehr effizient Wärme.',
+    a: 'Ein Sonnenkollektor liefert pro m² rund zwei- bis dreimal mehr Energie als ein PV-Modul – aber als Wärme. Strom ist dafür vielseitiger einsetzbar.',
   },
   {
     q: 'Lohnt sich eine Kombination aus Solarthermie und PV?',
@@ -160,26 +158,6 @@ export const solarFaqs = [
   {
     q: 'Brauche ich einen Batteriespeicher?',
     a: 'Nicht zwingend. Ein Batteriespeicher erhöht den Anteil des eigenen Stroms, den Sie selbst nutzen. Auch ein Boiler oder eine Wärmepumpe kann Solarstrom als Wärme speichern. Wir zeigen Ihnen, was für Ihren Verbrauch sinnvoll ist.',
-  },
-  {
-    q: 'Kann ich meinen bestehenden Boiler weiter nutzen?',
-    a: 'Das hängt vom Boiler ab. Für Solarwärme braucht der Speicher einen Wärmetauscher, über den die Kollektoren das Wasser erwärmen. Ist keiner vorhanden oder ist der Boiler alt, ist ein Solar- oder Kombiboiler meist die bessere Lösung. Für Solarstrom lässt sich ein bestehender Elektroboiler oft so steuern, dass er bevorzugt mit eigenem Strom heizt. Wir prüfen Zustand, Grösse und Anschlüsse vor Ort und sagen Ihnen ehrlich, was sich lohnt.',
-  },
-  {
-    q: 'Kann ich mit Solarstrom auch Warmwasser machen?',
-    a: 'Ja. Am effizientesten mit einem Wärmepumpenboiler oder einer Wärmepumpe: Sie machen aus 1 kWh Strom rund 3 kWh Wärme. Ein Elektroboiler mit Heizstab geht auch, braucht aber etwa dreimal mehr Strom für dieselbe Menge Warmwasser. Mit einer passenden Steuerung heizt der Boiler vor allem dann, wenn die Sonne scheint.',
-  },
-  {
-    q: 'Welche Dachausrichtung eignet sich?',
-    a: 'Am meisten Ertrag bringt ein Dach nach Süden. Für Photovoltaik eignen sich auch Ost- und Westdächer gut: Sie liefern über den Tag verteilter Strom, morgens und abends, wenn im Haushalt oft mehr verbraucht wird. Auf Flachdächern werden die Module oder Kollektoren aufgeständert. Wir beurteilen Ihr Dach bei der Beratung.',
-  },
-  {
-    q: 'Was passiert mit überschüssigem Solarstrom?',
-    a: 'Was Sie nicht selbst verbrauchen, fliesst ins Stromnetz und wird von Ihrem Energieversorger vergütet. Wer mehr selbst nutzen will, lädt damit einen Batteriespeicher, das E-Auto oder heizt den Boiler.',
-  },
-  {
-    q: 'Wie lange hält eine Solaranlage?',
-    a: 'Kollektoren und PV-Module sind auf viele Jahrzehnte ausgelegt. Einzelne Teile wie der Wechselrichter der PV-Anlage oder die Pumpe der Solarthermie werden während der Lebensdauer meist einmal ersetzt. Regelmässiger Service hält die Anlage zuverlässig.',
   },
   {
     q: 'Braucht es eine Baubewilligung?',
