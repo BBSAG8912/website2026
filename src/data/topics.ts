@@ -49,14 +49,20 @@ export const topics: Topic[] = [
     intro:
       'Mit der Zeit sammeln sich im Boiler Sand, Ablagerungen und Kalk. Ein regelmässiger Service hält das Warmwasser hygienisch, spart Energie und verlängert die Lebensdauer Ihres Boilers.',
     steps: [
-      { title: 'Offerte anfragen', text: 'Telefonisch unter 044 762 40 00 oder über das Serviceformular – die Offerte erhalten Sie innert weniger Stunden.' },
-      { title: 'Service vor Ort', text: 'Wir entfernen Sand und Ablagerungen im Boilersumpf und entkalken den Boiler.' },
-      { title: 'Schutz und Kontrolle', text: 'Bei jeder Entkalkung schützen wir den Boiler gegen Korrosion und prüfen Temperatur und Ventile.' },
+      { title: 'Offerte anfragen', text: 'Telefonisch unter 044 762 40 00 oder über das Serviceformular.' },
+      {
+        title: 'Service vor Ort',
+        text: 'Wir entfernen Kalk und Ablagerungen im Boilersumpf und entkalken den Boiler. Dabei prüfen wir das Warmwassersystem inklusive Zustand des Boilers, kontrollieren den Korrosionsschutz und legen das Intervall für den nächsten Service fest.',
+      },
+      {
+        title: 'Schutz und Kontrolle',
+        text: 'Ihr Boiler wird in unserem eigenen System erfasst. So führen wir eine saubere Dokumentation über Ihr Gerät und dessen Zustand und können Sie rechtzeitig auf den nächsten Termin aufmerksam machen.',
+      },
     ],
     blocks: [
       {
         title: 'Hygienisches Warmwasser',
-        text: 'Ablagerungen im Boilersumpf begünstigen Keime. Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre.',
+        text: 'Ablagerungen im Boilersumpf begünstigen Keime. Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre. Dies hängt jedoch von verschiedenen Umständen ab und wird bei der Wartung genau beurteilt.',
       },
       {
         title: 'Weniger Energie, mehr Leistung',
@@ -64,11 +70,11 @@ export const topics: Topic[] = [
       },
       {
         title: 'Längere Lebensdauer',
-        text: 'Regelmässige Pflege beugt Schäden und Ausfällen vor. Den passenden Service-Intervall legen wir individuell mit Ihnen fest.',
+        text: 'Regelmässige Pflege beugt Schäden und Ausfällen vor. Das passende Service-Intervall legen wir individuell mit Ihnen fest.',
       },
     ],
     faqs: [
-      { q: 'Wie oft sollte ein Boiler gewartet werden?', a: 'Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre. Gerne vereinbaren wir mit Ihnen einen individuellen Service-Intervall.' },
+      { q: 'Wie oft sollte ein Boiler gewartet werden?', a: 'Aus hygienischen Gründen empfehlen wir eine Wartung etwa alle drei Jahre. Gerne vereinbaren wir mit Ihnen ein individuelles Service-Intervall.' },
       { q: 'Was ist im Service enthalten?', a: 'Wir entfernen Sand und Ablagerungen im Boilersumpf, entkalken den Boiler und schützen ihn dabei gegen Korrosion.' },
       { q: 'Wie wird abgerechnet?', a: 'Wir arbeiten mit Netto-Pauschalpreisen. Anfahrt, Kleinmaterial und Dichtungen sind inbegriffen.' },
     ],
@@ -83,8 +89,14 @@ export const topics: Topic[] = [
       'Wir reparieren Boiler und ersetzen sie, wenn sich eine Reparatur nicht mehr lohnt. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Modelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt.',
     steps: [
       { title: 'Kontakt aufnehmen', text: 'Telefonisch unter 044 762 40 00, per E-Mail oder über das Serviceformular.' },
-      { title: 'Beratung', text: 'Wir sagen Ihnen ehrlich, ob sich eine Reparatur lohnt oder ein Ersatz sinnvoller ist.' },
-      { title: 'Ausführung', text: 'Dank Ersatzteilen im Servicefahrzeug meist in einem Arbeitsgang – mit möglichst kurzem Unterbruch beim Warmwasser.' },
+      {
+        title: 'Beratung',
+        text: 'Falls nötig klären wir die Situation vor Ort, um Ihnen eine transparente und ehrliche Lösung anbieten zu können. Im Rahmen eines Service lässt sich klären, ob ein neues Gerät sinnvoll ist oder eine Reparatur weiterhin möglich ist.',
+      },
+      {
+        title: 'Ausführung',
+        text: 'Wir haben Boiler bis 1000 Liter an Lager, um Ihnen falls nötig schnellstmöglich Ersatz bieten zu können. Unsere Installateure ersetzen den Boiler fachgerecht und entsorgen das alte Gerät ebenso fachgerecht.',
+      },
     ],
     blocks: [
       {
@@ -146,7 +158,7 @@ export const topics: Topic[] = [
     title: 'Elysator-Produkte',
     imageHint: 'Elysator-Gerät',
     teaser: 'Elysator-Produkte ab Lager – mit technischem Kundendienst aus Obfelden und Bubikon.',
-    intro: 'Als Elysator technischer Kundendienst haben wir verschiedene Elysator-Produkte am Lager und betreuen sie im Service.',
+    intro: 'Als technischer Kundendienst von Elysator haben wir verschiedene Elysator-Produkte am Lager und betreuen sie im Service.',
     steps: steps(),
     blocks: blocks(),
     faqs: faqs(),
@@ -190,7 +202,7 @@ export const whyUs = [
   { title: 'Kompetente Beratung', text: 'Seit 1992 auf Warmwasser spezialisiert: Boiler, Solar sowie Korrosions- und Kalkschutz.' },
   { title: 'Effiziente Ausführung', text: 'Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit.' },
   { title: 'Transparenter Preis', text: 'Netto-Pauschalpreise inklusive Anfahrt, Kleinmaterial und Dichtungen.' },
-  { title: 'Umfassender Service', text: 'Möglichst kurze Unterbrüche beim Warmwasser und ein Service-Intervall, der zu Ihrer Anlage passt.' },
+  { title: 'Umfassender Service', text: 'Möglichst kurze Unterbrüche beim Warmwasser und ein Service-Intervall, das zu Ihrer Anlage passt.' },
 ];
 
 export const placeholderProjects = [1, 2, 3, 4].map((n) => ({ title: `[Projekt ${n}]`, meta: '[Ort · Jahr]' }));

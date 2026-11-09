@@ -5,6 +5,8 @@
 import type { ImageMetadata } from 'astro';
 import volldach from '../assets/fotos/referenz-volldach.jpg';
 import projekt2 from '../assets/fotos/referenz-projekt-2.jpg';
+import waermeStrom from '../assets/fotos/referenz-waerme-strom.jpg';
+import solarvolldach from '../assets/fotos/referenz-solarvolldach.jpg';
 
 export const solarIntro = {
   statement: 'Seit über 30 Jahren nutzen wir Solarenergie.',
@@ -86,13 +88,6 @@ export interface Reference {
   facts: { label: string; value: string }[];
 }
 
-const openFacts = [
-  { label: 'PV-Leistung', value: '[kWp]' },
-  { label: 'Kollektorfläche', value: '[m²]' },
-  { label: 'Warmwasser', value: '[Liter]' },
-  { label: 'Jahresertrag', value: '[kWh]' },
-];
-
 export const references: Reference[] = [
   {
     title: 'Volldachlösung in Rüedisbach',
@@ -107,21 +102,38 @@ export const references: Reference[] = [
     ],
   },
   {
-    title: '[Projekt 2]',
-    text: '[Kurze Beschreibung: Gebäude, Anlage, Besonderheit]',
+    title: 'Solarnutzung in einem Reihenhaus',
+    text: 'Warmwasser mit Solarthermie in Kombination mit einer Brauchwasser-Wärmepumpe, dazu Solarstrom mit Batteriespeicher.',
     image: projekt2,
-    imageAlt: 'Hausfassade mit Solardach',
+    imageAlt: 'Reihenhaus mit Solardach',
     facts: [
       { label: 'PV-Leistung', value: '4,8 kWp' },
       { label: 'Kollektorfläche', value: '5 m²' },
       { label: 'Warmwasser', value: '600 Liter' },
     ],
   },
-  ...[3, 4].map((n) => ({
-    title: `[Projekt ${n}]`,
-    text: '[Kurze Beschreibung: Gebäude, Anlage, Besonderheit]',
-    facts: openFacts,
-  })),
+  {
+    title: 'Wärme und Strom kombiniert',
+    text: 'Warmwasser dank Solarthermie, dazu Stromproduktion und Batteriespeicher für einen möglichst hohen Eigenverbrauch.',
+    image: waermeStrom,
+    imageAlt: 'Dach mit Sonnenkollektoren und PV-Modulen',
+    facts: [
+      { label: 'PV-Leistung', value: '6,4 kWp' },
+      { label: 'Kollektorfläche', value: '5 m²' },
+      { label: 'Warmwasser', value: '600 Liter' },
+    ],
+  },
+  {
+    title: 'Solarvolldach bis ins letzte Detail',
+    text: 'Solarwärme und Strom von der Sonne, bis ins letzte Detail in das ganze Dach integriert – dank massgefertigter Module der Firma 3S Solar.',
+    image: solarvolldach,
+    imageAlt: 'Ganzes Dach mit integrierter Solaranlage',
+    facts: [
+      { label: 'PV-Leistung', value: '4,8 kWp' },
+      { label: 'Kollektorfläche', value: '4,8 m²' },
+      { label: 'Warmwasser', value: '400 Liter' },
+    ],
+  },
 ];
 
 export const solarFaqs = [
