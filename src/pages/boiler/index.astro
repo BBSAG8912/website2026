@@ -10,7 +10,7 @@ import { routes } from '../../data/site';
 const items = topicsOf('boiler').map((t) => ({
   title: t.title,
   text: t.teaser,
-  image: t.image,
+  image: t.tileImage ?? t.image,
   imageAlt: t.imageAlt,
   imageHint: t.imageHint,
   cta: { label: 'Mehr erfahren', href: topicHref(t) },

@@ -11,6 +11,7 @@ import TextTile from './TextTile.astro';
 import Faq from './Faq.astro';
 import PhotoColumns from './PhotoColumns.astro';
 import HeatPumpBoiler from './HeatPumpBoiler.astro';
+import Photo from './Photo.astro';
 import { type Topic, sections, topicHref, topicsOf } from '../data/topics';
 import { routes } from '../data/site';
 
@@ -55,7 +56,13 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
             ))}
           </ul>
         </div>
-        {topic.feature.illustration === 'waermepumpenboiler' && <HeatPumpBoiler />}
+        {topic.feature.image ? (
+          <div class="feature__photo">
+            <Photo image={topic.feature.image} alt={topic.feature.imageAlt} sizes="(min-width: 900px) 45vw, 100vw" />
+          </div>
+        ) : (
+          topic.feature.illustration === 'waermepumpenboiler' && <HeatPumpBoiler />
+        )}
       </section>
     )
   }
@@ -72,7 +79,7 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
         n: '',
         title: s.title,
         text: s.teaser,
-        image: s.image,
+        image: s.relatedImage ?? s.tileImage ?? s.image,
         imageAlt: s.imageAlt,
         imageHint: s.imageHint,
         cta: { label: 'Zum Thema', href: topicHref(s) },
@@ -120,7 +127,18 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
     color: var(--c-text-muted);
   }
 
+  .feature__photo {
+    position: relative;
+    min-height: 560px;
+    border-radius: calc(var(--r-tile) - 8px);
+    overflow: hidden;
+  }
+
   @media (max-width: 899.98px) {
+    .feature__photo {
+      min-height: 420px;
+    }
+
     .feature {
       grid-template-columns: minmax(0, 1fr);
     }

@@ -2,12 +2,15 @@
 /** 6k Korrosions- und Kalkschutz – Aufbau wie Solar, CTA führt zu «Service anfragen». */
 import OfferPage from '../components/OfferPage.astro';
 import { routes } from '../data/site';
+import { foto } from '../data/fotos';
 ---
 
 <OfferPage
   title="Korrosions- und Kalkschutz"
   description="Korrosions- und Kalkschutz für Boiler und Wasserleitungen – Elysator Servicestelle Berger Boiler-Service AG."
   heroHint="Schutzanlage an Wasserleitung"
+  heroImage={foto('korrosion-rost')}
+  heroImageAlt="Korrosion an einer Wasserleitung"
   titleSize={84}
   mobileTitleSize={42}
   ctaLabel="Service anfragen"
@@ -33,6 +36,8 @@ import { routes } from '../data/site';
       title: 'Kalkschutz ohne Salz',
       text: 'Kalkschutz mit dem permasolvent primus 2.0 von perma-trade – ohne Salz und ohne chemische Zusätze.',
       imageHint: 'permasolvent primus 2.0',
+      image: foto('permasolvent-primus'),
+      imageAlt: 'Kalkschutzgerät permasolvent primus 2.0 an der Wasserleitung',
       facts: [
         { label: 'Objekt', value: 'Kleines MFH' },
         { label: 'Schutzsystem', value: 'permasolvent primus 2.0' },
@@ -43,6 +48,8 @@ import { routes } from '../data/site';
       title: 'Korrosionsschutz für die Heizung',
       text: 'Der Elysator trio schützt das Heizungswasser: Er scheidet Gase ab, bindet Säuren und filtert Schlamm aus dem Kreislauf.',
       imageHint: 'Elysator trio',
+      image: foto('elysator-trio'),
+      imageAlt: 'Elysator trio im Heizungskreislauf',
       facts: [
         { label: 'Objekt', value: '[z. B. EFH, MFH]' },
         { label: 'Schutzsystem', value: 'Elysator trio' },

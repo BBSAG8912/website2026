@@ -5,6 +5,7 @@
  */
 import type { ImageMetadata } from 'astro';
 import { routes } from './site';
+import { foto } from './fotos';
 
 export interface Topic {
   slug: string;
@@ -16,11 +17,15 @@ export interface Topic {
   imageHint: string;
   image?: ImageMetadata;
   imageAlt?: string;
+  /** Foto auf der Übersichtsseite (sonst image) */
+  tileImage?: ImageMetadata;
+  /** Foto in «Weitere Themen» auf den anderen Themenseiten (sonst tileImage/image) */
+  relatedImage?: ImageMetadata;
   steps: { title: string; text: string }[];
   blocks: { title: string; text: string }[];
   faqs: { q: string; a: string }[];
   /** Optionaler Zusatzabschnitt mit Illustration (z. B. Wärmepumpenboiler) */
-  feature?: { title: string; text: string; points: string[]; illustration: 'waermepumpenboiler' };
+  feature?: { title: string; text: string; points: string[]; illustration: 'waermepumpenboiler'; image?: ImageMetadata; imageAlt?: string };
 }
 
 const steps = () => [
@@ -47,6 +52,10 @@ export const topics: Topic[] = [
     section: 'boiler',
     title: 'Service und Entkalkung',
     imageHint: 'Kalk im Boiler',
+    image: foto('kalk-im-boiler'),
+    imageAlt: 'Kalkablagerungen in einem geöffneten Boiler',
+    tileImage: foto('boiler-entkalkung'),
+    relatedImage: foto('kalk-am-register'),
     teaser: 'Regelmässige Wartung und Entkalkung – für hygienisches Warmwasser und einen sparsamen Boiler.',
     intro:
       'Mit der Zeit sammeln sich im Boiler Sand, Ablagerungen und Kalk. Ein regelmässiger Service hält das Warmwasser hygienisch, spart Energie und verlängert die Lebensdauer Ihres Boilers.',
@@ -86,6 +95,9 @@ export const topics: Topic[] = [
     section: 'boiler',
     title: 'Reparatur und Ersatz',
     imageHint: 'Montage eines neuen Boilers',
+    image: foto('servicefahrzeug'),
+    imageAlt: 'Servicefahrzeug von Berger Boiler-Service',
+    tileImage: foto('boiler-mit-waermepumpe'),
     teaser: 'Reparieren, wo es sich lohnt – und wenn nötig ein neuer Berger Boiler.',
     intro:
       'Wir reparieren Boiler und Wärmepumpenboiler und ersetzen sie, wenn sich eine Reparatur nicht mehr lohnt. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Modelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt.',
@@ -132,6 +144,8 @@ export const topics: Topic[] = [
         'Ersatz, wenn sich eine Reparatur nicht mehr lohnt',
       ],
       illustration: 'waermepumpenboiler',
+      image: foto('waermepumpenboiler-reparatur'),
+      imageAlt: 'Reparatur an einem Wärmepumpenboiler',
     },
   },
   {

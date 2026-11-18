@@ -14,11 +14,14 @@ import StepTile from './StepTile.astro';
 import CtaBlock from './CtaBlock.astro';
 import { whyUs, placeholderProjects } from '../data/topics';
 import { routes } from '../data/site';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
   title: string;
   description: string;
   heroHint: string;
+  heroImage?: ImageMetadata;
+  heroImageAlt?: string;
   titleSize: number;
   mobileTitleSize: number;
   ctaLabel: string;
@@ -38,6 +41,8 @@ const {
   title,
   description,
   heroHint,
+  heroImage,
+  heroImageAlt,
   titleSize,
   mobileTitleSize,
   ctaLabel,
@@ -60,6 +65,8 @@ const {
     titleSize={titleSize}
     mobileTitleSize={mobileTitleSize}
     imageHint={heroHint}
+    image={heroImage}
+    imageAlt={heroImageAlt}
   />
 
   <LeadSplit statement={statement} intro={intro} />
