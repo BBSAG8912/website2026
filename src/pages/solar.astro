@@ -11,8 +11,7 @@ import SectionTitle from '../components/SectionTitle.astro';
 import StepTile from '../components/StepTile.astro';
 import Faq from '../components/Faq.astro';
 import CtaBlock from '../components/CtaBlock.astro';
-import Photo from '../components/Photo.astro';
-import Copy from '../components/Copy.astro';
+import ReferenceTiles from '../components/ReferenceTiles.astro';
 import { routes } from '../data/site';
 import heroImage from '../assets/fotos/solar-hero.jpg';
 import {
@@ -177,35 +176,7 @@ const pct = (v: number) => `${((v / chartMax) * 100).toFixed(1)}%`;
   <p class="sources">{sources}</p>
 
   <SectionTitle title="Projekte und Referenzen" />
-  <ul class="refs" aria-label="Projekte und Referenzen">
-    {
-      references.map((r) => (
-        <li class="ref" tabindex="0">
-          <div class="ref__img">
-            <Photo image={r.image} alt={r.imageAlt} sizes="(min-width: 900px) 40vw, 100vw" widths={[480, 800, 1200]} />
-          </div>
-          <div class="ref__body">
-            <h3>
-              <Copy text={r.title} />
-            </h3>
-            <p>
-              <Copy text={r.text} />
-            </p>
-            <dl>
-              {r.facts.map((f) => (
-                <div>
-                  <dt>{f.label}</dt>
-                  <dd>
-                    <Copy text={f.value} />
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+  <ReferenceTiles items={references} />
 
   <Faq title="Häufige Fragen zu Solar" items={solarFaqs} />
 
@@ -493,90 +464,6 @@ const pct = (v: number) => `${((v / chartMax) * 100).toFixed(1)}%`;
     color: var(--c-text-muted);
   }
 
-  /* Referenzen: Hover/Fokus verbreitert die Kachel (Desktop) */
-  .refs {
-    list-style: none;
-    margin: 0;
-    padding: 0 var(--gutter-tiles);
-    display: flex;
-    gap: var(--gap-tiles);
-  }
-
-  .ref {
-    flex: 1 1 0;
-    min-width: 0;
-    border-radius: var(--r-tile);
-    background: var(--c-surface-tint);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition:
-      flex-grow var(--dur-expand) var(--ease-expand),
-      box-shadow 0.3s;
-  }
-
-  .ref:hover,
-  .ref:focus-within {
-    flex-grow: 1.8;
-    box-shadow: 0 10px 28px rgba(30, 26, 38, 0.14);
-  }
-
-  .ref__img {
-    position: relative;
-    height: 280px;
-  }
-
-  .ref__body {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .ref__body h3 {
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .ref__body p {
-    font-size: 15px;
-    line-height: 1.5;
-    color: var(--c-text-muted);
-  }
-
-  .ref dl {
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
-  }
-
-  .ref dl > div {
-    background: #fff;
-    border-radius: 12px;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .ref dt {
-    font-size: 13px;
-    color: var(--c-text-muted);
-  }
-
-  .ref dd {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ref {
-      transition: none;
-    }
-  }
-
   @media (max-width: 899.98px) {
     .intro,
     .charts,
@@ -629,17 +516,5 @@ const pct = (v: number) => `${((v / chartMax) * 100).toFixed(1)}%`;
       font-size: 24px;
     }
 
-    .refs {
-      flex-direction: column;
-    }
-
-    .ref:hover,
-    .ref:focus-within {
-      flex-grow: 1;
-    }
-
-    .ref__img {
-      height: 220px;
-    }
   }
 </style>

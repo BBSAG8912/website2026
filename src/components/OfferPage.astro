@@ -9,6 +9,7 @@ import LeadSplit from './LeadSplit.astro';
 import TextTile from './TextTile.astro';
 import SectionTitle from './SectionTitle.astro';
 import ProjectTiles, { type Project } from './ProjectTiles.astro';
+import ReferenceTiles, { type Reference } from './ReferenceTiles.astro';
 import StepTile from './StepTile.astro';
 import CtaBlock from './CtaBlock.astro';
 import { whyUs, placeholderProjects } from '../data/topics';
@@ -27,6 +28,8 @@ interface Props {
   intro?: string;
   blocks?: { title: string; text: string }[];
   projects?: Project[];
+  /** Referenzkacheln mit Bild, Text und Fakten (ersetzt die einfachen Projektkacheln) */
+  references?: Reference[];
 }
 
 const placeholderBlocks = [1, 2, 3].map((n) => ({ title: `[Abschnitt ${n}]`, text: '[2–3 Sätze]' }));
@@ -44,6 +47,7 @@ const {
   intro = '[Einleitung: Angebot, für wen, Nutzen]',
   blocks = placeholderBlocks,
   projects = placeholderProjects,
+  references,
 } = Astro.props;
 ---
 
@@ -65,7 +69,7 @@ const {
   </div>
 
   <SectionTitle title="Projekte und Referenzen" />
-  <ProjectTiles items={projects} label="Projekte und Referenzen" />
+  {references ? <ReferenceTiles items={references} /> : <ProjectTiles items={projects} label="Projekte und Referenzen" />}
 
   <SectionTitle title="Warum Sie bei uns richtig sind" />
   <div class="tile-grid tile-grid--m2" style="--cols: 4">

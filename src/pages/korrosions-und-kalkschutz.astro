@@ -28,5 +28,16 @@ import { routes } from '../data/site';
       text: 'Als technischer Kundendienst für Elysator verkaufen und betreuen wir Elysator-Anlagen – in Obfelden und Bubikon.',
     },
   ]}
+  references={[1, 2, 3, 4].map((n) => ({
+    title: `[Projekt ${n}]`,
+    text: '[Kurze Beschreibung: Gebäude, Problem, Lösung]',
+    imageHint: 'Schutzanlage oder Boiler im Objekt',
+    facts: [
+      { label: 'Objekt', value: '[z. B. EFH, MFH]' },
+      { label: 'Schutzsystem', value: '[z. B. Elysator]' },
+      { label: 'Boilerinhalt', value: '[Liter]' },
+      { label: 'Jahr', value: '[Jahr]' },
+    ],
+  }))}
   ctaTitle="Fragen zu Kalk oder Korrosion?"
 />

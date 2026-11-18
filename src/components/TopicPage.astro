@@ -10,6 +10,7 @@ import StepTile from './StepTile.astro';
 import TextTile from './TextTile.astro';
 import Faq from './Faq.astro';
 import PhotoColumns from './PhotoColumns.astro';
+import HeatPumpBoiler from './HeatPumpBoiler.astro';
 import { type Topic, sections, topicHref, topicsOf } from '../data/topics';
 import { routes } from '../data/site';
 
@@ -42,6 +43,23 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
     {topic.blocks.map((b) => <TextTile title={b.title} text={b.text} />)}
   </div>
 
+  {
+    topic.feature && (
+      <section class="feature" aria-labelledby="feature-title">
+        <div class="feature__text">
+          <h2 id="feature-title">{topic.feature.title}</h2>
+          <p>{topic.feature.text}</p>
+          <ul>
+            {topic.feature.points.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+        </div>
+        {topic.feature.illustration === 'waermepumpenboiler' && <HeatPumpBoiler />}
+      </section>
+    )
+  }
+
   <Faq items={topic.faqs} />
 
   <SectionTitle title={section.siblingsTitle} />
@@ -62,3 +80,61 @@ const siblings = topicsOf(topic.section).filter((t) => t.slug !== topic.slug);
     />
   </div>
 </BaseLayout>
+
+<style>
+  .feature {
+    margin: var(--gap-tiles) var(--gutter-tiles) 0;
+    padding: var(--gap-tiles);
+    border-radius: var(--r-tile);
+    background: var(--c-surface-tint);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--gap-tiles);
+  }
+
+  .feature__text {
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: center;
+  }
+
+  .feature__text h2 {
+    font-size: 44px;
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .feature__text p {
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .feature__text ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--c-text-muted);
+  }
+
+  @media (max-width: 899.98px) {
+    .feature {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .feature__text {
+      padding: 20px 12px;
+    }
+
+    .feature__text h2 {
+      font-size: 30px;
+    }
+
+    .feature__text p {
+      font-size: 17px;
+    }
+  }
+</style>

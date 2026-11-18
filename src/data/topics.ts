@@ -19,6 +19,8 @@ export interface Topic {
   steps: { title: string; text: string }[];
   blocks: { title: string; text: string }[];
   faqs: { q: string; a: string }[];
+  /** Optionaler Zusatzabschnitt mit Illustration (z. B. Wärmepumpenboiler) */
+  feature?: { title: string; text: string; points: string[]; illustration: 'waermepumpenboiler' };
 }
 
 const steps = () => [
@@ -86,7 +88,7 @@ export const topics: Topic[] = [
     imageHint: 'Montage eines neuen Boilers',
     teaser: 'Reparieren, wo es sich lohnt – und wenn nötig ein neuer Berger Boiler.',
     intro:
-      'Wir reparieren Boiler und ersetzen sie, wenn sich eine Reparatur nicht mehr lohnt. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Modelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt.',
+      'Wir reparieren Boiler und Wärmepumpenboiler und ersetzen sie, wenn sich eine Reparatur nicht mehr lohnt. Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Modelle mit – so ist die Arbeit meist in einem Arbeitsgang erledigt.',
     steps: [
       { title: 'Kontakt aufnehmen', text: 'Telefonisch unter 044 762 40 00, per E-Mail oder über das Serviceformular.' },
       {
@@ -115,8 +117,22 @@ export const topics: Topic[] = [
     faqs: [
       { q: 'Lohnt sich die Reparatur meines Boilers noch?', a: 'Das hängt von Alter und Zustand ab. Wir beraten Sie ehrlich – Reparatur und Pflege sind oft günstiger als ein neuer Boiler.' },
       { q: 'Wie lange bin ich ohne Warmwasser?', a: 'Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit. Meist erledigen wir die Arbeit in einem Arbeitsgang.' },
-      { q: '[Frage 3]', a: '[Antwort]' },
+      {
+        q: 'Reparieren Sie auch Wärmepumpenboiler?',
+        a: 'Ja. Unsere Servicetechniker sind für den Umgang mit Kältemitteln ausgebildet. Wir reparieren deshalb nicht nur den Speicher, sondern auch die Wärmepumpe auf dem Boiler.',
+      },
     ],
+    feature: {
+      title: 'Reparatur von Wärmepumpenboilern',
+      text: 'Auch Wärmepumpenboiler reparieren wir. Sie erwärmen das Wasser mit einem kleinen Kältemittelkreislauf auf dem Speicher – Arbeiten daran erfordern eine spezielle Ausbildung. Unsere Servicetechniker sind für den Umgang mit Kältemitteln ausgebildet. So stellen wir den ganzen Wärmepumpenboiler instand, nicht nur den Speicher.',
+      points: [
+        'Kältemittelkreislauf prüfen und instand stellen',
+        'Kompressor, Ventilator und Verdampfer kontrollieren',
+        'Speicher, Anode und Heizstab warten',
+        'Ersatz, wenn sich eine Reparatur nicht mehr lohnt',
+      ],
+      illustration: 'waermepumpenboiler',
+    },
   },
   {
     slug: 'boiler-ersatzteile',

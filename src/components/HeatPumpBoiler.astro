@@ -1,0 +1,103 @@
+---
+/**
+ * Schnittzeichnung eines Wärmepumpenboilers: Wärmepumpe mit Ventilator, Verdampfer und
+ * Kompressor oben, Kältemittel-Kondensator als Wendel im Speicher, Anode und Heizstab.
+ * Eigene Illustration – kann später durch ein Foto ersetzt werden.
+ */
+interface Props {
+  title?: string;
+}
+const { title = 'Schnitt durch einen Wärmepumpenboiler' } = Astro.props;
+---
+
+<figure class="hpb">
+  <svg viewBox="0 0 600 620" role="img" aria-labelledby="hpb-title hpb-desc">
+    <title id="hpb-title">{title}</title>
+    <desc id="hpb-desc">
+      Oben sitzt die Wärmepumpe mit Ventilator, Verdampfer und Kompressor. Der Kältemittelkreislauf führt als Wendel in den Speicher und gibt dort die Wärme
+      an das Wasser ab. Im Speicher hängen Schutzanode und Heizstab.
+    </desc>
+    <defs>
+      <clipPath id="hpb-tank"><rect x="110" y="190" width="200" height="390" rx="36"></rect></clipPath>
+      <linearGradient id="hpb-water" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6a5497"></stop>
+        <stop offset="1" stop-color="#d9d3e6"></stop>
+      </linearGradient>
+    </defs>
+
+    <!-- Speicher -->
+    <g clip-path="url(#hpb-tank)">
+      <rect x="110" y="190" width="200" height="390" fill="url(#hpb-water)"></rect>
+    </g>
+    <rect x="110" y="190" width="200" height="390" rx="36" fill="none" stroke="#1e1a26" stroke-width="4"></rect>
+
+    <!-- Wärmepumpe oben -->
+    <rect x="96" y="40" width="228" height="140" rx="22" fill="#f4f2f8" stroke="#1e1a26" stroke-width="4"></rect>
+    <!-- Ventilator -->
+    <circle cx="170" cy="110" r="44" fill="#fff" stroke="#1e1a26" stroke-width="3"></circle>
+    <g fill="#6a5497">
+      <path d="M170 110 L170 72 A38 38 0 0 1 196 84 Z"></path>
+      <path d="M170 110 L206 122 A38 38 0 0 1 190 145 Z"></path>
+      <path d="M170 110 L140 136 A38 38 0 0 1 134 98 Z"></path>
+    </g>
+    <circle cx="170" cy="110" r="7" fill="#1e1a26"></circle>
+    <!-- Kompressor -->
+    <rect x="240" y="78" width="54" height="72" rx="12" fill="#6a5497"></rect>
+
+    <!-- Kältemittel-Wendel im Speicher -->
+    <path
+      d="M126 150 V230 H270 Q282 230 282 242 Q282 254 270 254 H150 Q138 254 138 266 Q138 278 150 278 H270 Q282 278 282 290 Q282 302 270 302 H150 Q138 302 138 314 Q138 326 150 326 H296 V150"
+      fill="none"
+      stroke="#fff"
+      stroke-width="7"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+
+    <!-- Anode und Heizstab -->
+    <line x1="230" y1="400" x2="230" y2="560" stroke="#1e1a26" stroke-width="6" stroke-linecap="round" opacity=".55"></line>
+    <path d="M110 520 H190 Q200 520 200 530 Q200 540 190 540 H110" fill="none" stroke="#1e1a26" stroke-width="6" stroke-linecap="round" opacity=".55"></path>
+
+    <!-- Anschlüsse -->
+    <path d="M310 230 H352" stroke="#6a5497" stroke-width="10" stroke-linecap="round"></path>
+    <path d="M310 552 H352" stroke="#b9a6dd" stroke-width="10" stroke-linecap="round"></path>
+
+    <!-- Beschriftungen -->
+    <g font-family="inherit" font-size="17" fill="#1e1a26">
+      <line x1="324" y1="66" x2="376" y2="66" stroke="#1e1a26" stroke-width="1.5"></line>
+      <text x="384" y="62">Ventilator und</text>
+      <text x="384" y="82">Verdampfer</text>
+
+      <line x1="294" y1="120" x2="376" y2="128" stroke="#1e1a26" stroke-width="1.5"></line>
+      <text x="384" y="134">Kompressor</text>
+
+      <line x1="300" y1="290" x2="376" y2="296" stroke="#1e1a26" stroke-width="1.5"></line>
+      <text x="384" y="296">Kältemittelkreislauf</text>
+      <text x="384" y="316" fill="#5e5869" font-size="15">gibt Wärme ans Wasser ab</text>
+
+      <text x="364" y="236">Warmwasser</text>
+      <text x="364" y="558">Kaltwasser</text>
+
+      <line x1="236" y1="470" x2="376" y2="470" stroke="#1e1a26" stroke-width="1.5"></line>
+      <text x="384" y="466">Schutzanode</text>
+      <text x="384" y="486" fill="#5e5869" font-size="15">und Heizstab</text>
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .hpb {
+    margin: 0;
+    background: #fff;
+    border-radius: var(--r-tile);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    min-height: 100%;
+  }
+
+  .hpb svg {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+  }
+</style>
