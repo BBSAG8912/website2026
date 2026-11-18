@@ -175,7 +175,7 @@ export const solarFaqs = [
 
 export const solarWhyUs = [
   { title: 'Kompetente Beratung', text: 'Wir beraten Sie persönlich und entwickeln gemeinsam mit Ihnen eine passende Lösung für Ihre Energieversorgung.' },
-  { title: 'Fachgerechte Ausführung', text: 'Unsere eigenen Solarmitarbeitenden sorgen für eine sorgfältige Installation mit hochwertigen und bewährten Komponenten.' },
+  { title: 'Fachgerechte Ausführung', text: 'Unsere eigenen Mitarbeiter sorgen für eine sorgfältige Installation mit hochwertigen und bewährten Komponenten.' },
   { title: 'Transparente Angebote', text: 'Wir erstellen verständliche und nachvollziehbare Angebote, abgestimmt auf Ihre Bedürfnisse und die Gegebenheiten vor Ort.' },
   { title: 'Service und Betreuung', text: 'Auch nach der Installation sind wir für Sie da. Unser eigenes Serviceteam kümmert sich um Wartungen, Reparaturen und Störungen.' },
 ];
