@@ -46,7 +46,7 @@ export const topics: Topic[] = [
     slug: 'service-und-entkalkung',
     section: 'boiler',
     title: 'Service und Entkalkung',
-    imageHint: 'Entkalkung eines Boilers',
+    imageHint: 'Kalk im Boiler',
     teaser: 'Regelmässige Wartung und Entkalkung – für hygienisches Warmwasser und einen sparsamen Boiler.',
     intro:
       'Mit der Zeit sammeln sich im Boiler Sand, Ablagerungen und Kalk. Ein regelmässiger Service hält das Warmwasser hygienisch, spart Energie und verlängert die Lebensdauer Ihres Boilers.',
@@ -54,10 +54,10 @@ export const topics: Topic[] = [
       { title: 'Offerte anfragen', text: 'Telefonisch unter 044 762 40 00 oder über das Serviceformular.' },
       {
         title: 'Service vor Ort',
-        text: 'Wir entfernen Kalk und Ablagerungen im Boilersumpf und entkalken den Boiler. Dabei prüfen wir das Warmwassersystem inklusive Zustand des Boilers, kontrollieren den Korrosionsschutz und legen das Intervall für den nächsten Service fest.',
+        text: 'Wir entfernen Kalk und Ablagerungen im Boilersumpf und entkalken den Boiler. Dabei prüfen wir das Warmwassersystem sowie alle betriebs- und sicherheitsrelevanten Bauteile inklusive Zustand des Boilers. Wir stellen den Korrosionsschutz sicher und legen das Intervall für den nächsten Service fest.',
       },
       {
-        title: 'Schutz und Kontrolle',
+        title: 'Eintrag in unsere Kundenkartei',
         text: 'Ihr Boiler wird in unserem eigenen System erfasst. So führen wir eine saubere Dokumentation über Ihr Gerät und dessen Zustand und können Sie rechtzeitig auf den nächsten Termin aufmerksam machen.',
       },
     ],
