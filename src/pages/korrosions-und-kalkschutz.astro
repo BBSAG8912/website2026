@@ -13,31 +13,54 @@ import { routes } from '../data/site';
   ctaLabel="Service anfragen"
   ctaHref={routes.formService}
   statement="Wir betrachten nicht nur den Boiler, sondern das ganze Wasserverteilsystem."
-  intro="Quell-, Grund- und Seewasser enthält oft viel Sauerstoff und Kohlensäure. Das führt in Boilern zunehmend zu Korrosion. Wir beraten Sie umfassend zu Kalk- und Korrosionsschutz."
+  intro="Quell-, Grund- und Seewasser enthält oft viel Sauerstoff und Kohlensäure. Das führt in Boilern, aber auch in Ihren Leitungen zunehmend zu Korrosion. Wir beraten Sie umfassend zu Kalk- und Korrosionsschutz."
   blocks={[
     {
       title: 'Erste Anzeichen erkennen',
-      text: 'Hartnäckige Kalkablagerungen im Haushalt oder gelegentlich rotes Wasser aus dem Hahn deuten auf Kalk- oder Korrosionsprobleme hin. Bei emaillierten Boilern entstehen zudem feine Haarrisse, die korrodieren können.',
+      text: 'Hartnäckige Kalkablagerungen im Haushalt oder gelegentlich rotes Wasser aus dem Hahn deuten auf Kalk- oder Korrosionsprobleme hin.',
     },
     {
       title: 'Magnesium-Schutzanode',
       text: 'Die Anode im Behälter zieht die korrosive Wirkung des Wassers auf sich und wird dabei langsam verbraucht – der Boiler bleibt geschützt. Geeignet für emaillierte, plastifizierte, zementierte, Chromstahl- und schwarze Stahlboiler.',
     },
     {
-      title: 'Elysator Servicestelle',
-      text: 'Als technischer Kundendienst für Elysator verkaufen und betreuen wir Elysator-Anlagen – in Obfelden und Bubikon.',
+      title: 'Kalkschutz ohne Salz und Chemie',
+      text: 'Mit dem permasolvent primus 2.0 von perma-trade schützen wir Leitungen, Armaturen und Boiler vor Kalkablagerungen – ohne Salz und ohne chemische Zusätze. Das Gerät arbeitet mit Impfkristallbildung: Der Kalk bleibt als Mineralstoff im Wasser, setzt sich aber kaum noch ab.',
     },
   ]}
-  references={[1, 2, 3, 4].map((n) => ({
-    title: `[Projekt ${n}]`,
-    text: '[Kurze Beschreibung: Gebäude, Problem, Lösung]',
-    imageHint: 'Schutzanlage oder Boiler im Objekt',
-    facts: [
-      { label: 'Objekt', value: '[z. B. EFH, MFH]' },
-      { label: 'Schutzsystem', value: '[z. B. Elysator]' },
-      { label: 'Boilerinhalt', value: '[Liter]' },
-      { label: 'Jahr', value: '[Jahr]' },
-    ],
-  }))}
+  references={[
+    {
+      title: 'Kalkschutz ohne Salz',
+      text: 'Kalkschutz mit dem permasolvent primus 2.0 von perma-trade – ohne Salz und ohne chemische Zusätze.',
+      imageHint: 'permasolvent primus 2.0',
+      facts: [
+        { label: 'Objekt', value: 'Kleines MFH' },
+        { label: 'Schutzsystem', value: 'permasolvent primus 2.0' },
+        { label: 'Boilerinhalt', value: '[Liter]' },
+      ],
+    },
+    {
+      title: 'Korrosionsschutz für die Heizung',
+      text: 'Der Elysator trio schützt das Heizungswasser: Er scheidet Gase ab, bindet Säuren und filtert Schlamm aus dem Kreislauf.',
+      imageHint: 'Elysator trio',
+      facts: [
+        { label: 'Objekt', value: '[z. B. EFH, MFH]' },
+        { label: 'Schutzsystem', value: 'Elysator trio' },
+        { label: 'Anlageninhalt', value: '[Liter]' },
+        { label: 'Jahr', value: '[Jahr]' },
+      ],
+    },
+    ...[3, 4].map((n) => ({
+      title: `[Projekt ${n}]`,
+      text: '[Kurze Beschreibung: Gebäude, Problem, Lösung]',
+      imageHint: 'Schutzanlage oder Boiler im Objekt',
+      facts: [
+        { label: 'Objekt', value: '[z. B. EFH, MFH]' },
+        { label: 'Schutzsystem', value: '[z. B. Elysator]' },
+        { label: 'Boilerinhalt', value: '[Liter]' },
+        { label: 'Jahr', value: '[Jahr]' },
+      ],
+    })),
+  ]}
   ctaTitle="Fragen zu Kalk oder Korrosion?"
 />

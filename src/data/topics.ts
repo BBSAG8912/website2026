@@ -215,10 +215,10 @@ export const topicsOf = (section: Topic['section']) => topics.filter((t) => t.se
 
 /** «Warum Sie bei uns richtig sind» (Solar, Korrosions- und Kalkschutz) */
 export const whyUs = [
-  { title: 'Kompetente Beratung', text: 'Seit 1992 auf Warmwasser spezialisiert: Boiler, Solar sowie Korrosions- und Kalkschutz.' },
-  { title: 'Effiziente Ausführung', text: 'Unsere Servicefahrzeuge führen Ersatzteile für nahezu alle Boilermodelle mit.' },
-  { title: 'Transparenter Preis', text: 'Netto-Pauschalpreise inklusive Anfahrt, Kleinmaterial und Dichtungen.' },
-  { title: 'Umfassender Service', text: 'Möglichst kurze Unterbrüche beim Warmwasser und ein Service-Intervall, das zu Ihrer Anlage passt.' },
+  { title: 'Kompetente Beratung', text: 'Dank unserer Erfahrung beraten wir Sie umfassend rund um Ihr Leitungssystem.' },
+  { title: 'Effiziente Ausführung', text: 'Unsere Servicefahrzeuge führen Installations- und Servicematerial für fast alle Anlagen mit.' },
+  { title: 'Transparenter Preis', text: 'Sie erhalten eine verständliche Offerte – ohne versteckte Kosten.' },
+  { title: 'Umfassender Service', text: 'Möglichst kurze Unterbrüche an Ihrer Wasserversorgung und ein Service-Intervall, das zu Ihrer Anlage passt.' },
 ];
 
 export const placeholderProjects = [1, 2, 3, 4].map((n) => ({ title: `[Projekt ${n}]`, meta: '[Ort · Jahr]' }));

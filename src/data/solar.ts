@@ -11,7 +11,7 @@ import solarvolldach from '../assets/fotos/referenz-solarvolldach.jpg';
 export const solarIntro = {
   statement: 'Seit über 30 Jahren nutzen wir Solarenergie.',
   paragraphs: [
-    'Wir beraten Sie persönlich und kompetent zu Solaranlagen für die Warmwasseraufbereitung, kombiniert mit Heizsystemen sowie zur Erzeugung und Speicherung Ihres eigenen Stroms – auf Wunsch zusammen mit dem Ersatz Ihrer Wärmepumpe.',
+    'Wir beraten Sie persönlich und kompetent zu Solaranlagen für die Warmwasseraufbereitung, kombiniert mit Heizsystemen sowie zur Erzeugung und Speicherung Ihres eigenen Stroms.',
     'Unser Team für erneuerbare Energien begleitet Sie von der ersten Beratung über die Planung bis zur Installation und Inbetriebnahme. Dabei setzen wir auf hochwertige Komponenten und führen möglichst alle Arbeiten mit unseren eigenen Fachkräften aus.',
     'So erhalten Sie eine zuverlässige und auf Ihre Bedürfnisse abgestimmte Lösung aus einer Hand. Auch nach der Installation sind wir gerne für Sie da.',
   ],
